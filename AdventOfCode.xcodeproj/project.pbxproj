@@ -17,6 +17,10 @@
 		060906262847C47C0030C052 /* day2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060906252847C47C0030C052 /* day2.swift */; };
 		060906282847C5AD0030C052 /* day2_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 060906272847C4860030C052 /* day2_example.txt */; };
 		0609062A2847C5E40030C052 /* day2_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 060906292847C5D50030C052 /* day2_input.txt */; };
+		0609062D2848C1790030C052 /* day3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0609062C2848C1790030C052 /* day3.swift */; };
+		060906312848C4E70030C052 /* BinaryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060906302848C4E70030C052 /* BinaryUtils.swift */; };
+		060906322848C6070030C052 /* day3_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0609062E2848C1810030C052 /* day3_example.txt */; };
+		060906332848C6070030C052 /* day3_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0609062F2848C18B0030C052 /* day3_input.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +48,10 @@
 		060906252847C47C0030C052 /* day2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = day2.swift; sourceTree = "<group>"; };
 		060906272847C4860030C052 /* day2_example.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day2_example.txt; sourceTree = "<group>"; };
 		060906292847C5D50030C052 /* day2_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day2_input.txt; sourceTree = "<group>"; };
+		0609062C2848C1790030C052 /* day3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = day3.swift; sourceTree = "<group>"; };
+		0609062E2848C1810030C052 /* day3_example.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day3_example.txt; sourceTree = "<group>"; };
+		0609062F2848C18B0030C052 /* day3_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day3_input.txt; sourceTree = "<group>"; };
+		060906302848C4E70030C052 /* BinaryUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BinaryUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +96,7 @@
 				060906062847BBDE0030C052 /* main.swift */,
 				0609060D2847BBFA0030C052 /* Day1 */,
 				060906242847C46C0030C052 /* Day2 */,
+				0609062B2848C1670030C052 /* Day3 */,
 			);
 			path = "AdventOfCode-2021";
 			sourceTree = "<group>";
@@ -96,8 +105,8 @@
 			isa = PBXGroup;
 			children = (
 				060906152847BD8D0030C052 /* day1.swift */,
-				0609060E2847BC280030C052 /* day1_input.txt */,
 				0609060F2847BC4A0030C052 /* day1_example.txt */,
+				0609060E2847BC280030C052 /* day1_input.txt */,
 			);
 			path = Day1;
 			sourceTree = "<group>";
@@ -107,6 +116,7 @@
 			children = (
 				060906132847BCCE0030C052 /* Errors.swift */,
 				060906112847BC610030C052 /* FileReader.swift */,
+				060906302848C4E70030C052 /* BinaryUtils.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -119,6 +129,16 @@
 				060906292847C5D50030C052 /* day2_input.txt */,
 			);
 			path = Day2;
+			sourceTree = "<group>";
+		};
+		0609062B2848C1670030C052 /* Day3 */ = {
+			isa = PBXGroup;
+			children = (
+				0609062C2848C1790030C052 /* day3.swift */,
+				0609062E2848C1810030C052 /* day3_example.txt */,
+				0609062F2848C18B0030C052 /* day3_input.txt */,
+			);
+			path = Day3;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,9 +220,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				060906322848C6070030C052 /* day3_example.txt in Resources */,
 				060906222847C09B0030C052 /* day1_input.txt in Resources */,
 				060906282847C5AD0030C052 /* day2_example.txt in Resources */,
 				060906212847C09B0030C052 /* day1_example.txt in Resources */,
+				060906332848C6070030C052 /* day3_input.txt in Resources */,
 				0609062A2847C5E40030C052 /* day2_input.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -217,7 +239,9 @@
 				060906162847BD8D0030C052 /* day1.swift in Sources */,
 				060906122847BC610030C052 /* FileReader.swift in Sources */,
 				060906142847BCCE0030C052 /* Errors.swift in Sources */,
+				060906312848C4E70030C052 /* BinaryUtils.swift in Sources */,
 				060906262847C47C0030C052 /* day2.swift in Sources */,
+				0609062D2848C1790030C052 /* day3.swift in Sources */,
 				060906072847BBDE0030C052 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
