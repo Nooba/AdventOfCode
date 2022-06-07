@@ -8,6 +8,7 @@
 import Foundation
 
 enum AoCError: Error {
+    case resultNotFound
     case wrongFormat
     case fileNotFound
     case fileMissingData

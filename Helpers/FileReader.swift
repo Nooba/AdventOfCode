@@ -28,7 +28,26 @@ struct FileReader {
     }
 
     func getLines(filterEmptyLines: Bool = true) -> [String] {
-        return fileContent.components(separatedBy: CharacterSet.newlines).filter { !$0.isEmpty }
+        let content = fileContent.components(separatedBy: CharacterSet.newlines).map { $0.trimmingCharacters(in: .whitespaces) }
+        guard filterEmptyLines else {
+            return content
+        }
+        return content.filter { !$0.isEmpty }
+    }
+
+    func getGroupedLines() -> [[String]] {
+        let content = fileContent.components(separatedBy: CharacterSet.newlines).map { $0.trimmingCharacters(in: .whitespaces) }
+        let initialArray: [[String]] = [[]]
+        let result = content.reduce(into: initialArray) { partialResult, next in
+            var previous = partialResult.last ?? []
+            guard !next.isEmpty else {
+                partialResult.append([])
+                return
+            }
+            previous.append(next)
+            partialResult[partialResult.count-1] = previous
+        }
+        return result.dropLast()
     }
 
 }
