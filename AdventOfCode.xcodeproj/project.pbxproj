@@ -33,6 +33,10 @@
 		0623D88A2851DAA800ED604B /* day7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0623D8892851DAA800ED604B /* day7.swift */; };
 		0623D88D2851DABB00ED604B /* day7_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0623D88C2851DAB800ED604B /* day7_input.txt */; };
 		0623D88E2851DABB00ED604B /* day7_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0623D88B2851DAB000ED604B /* day7_example.txt */; };
+		0623D8912852285C00ED604B /* day8.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0623D8902852285C00ED604B /* day8.swift */; };
+		0623D8942852287100ED604B /* day8_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0623D8922852286300ED604B /* day8_example.txt */; };
+		0623D8952852287100ED604B /* day8_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0623D8932852286B00ED604B /* day8_input.txt */; };
+		0623D897285235D100ED604B /* day8_single_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0623D8962852359600ED604B /* day8_single_example.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,6 +80,10 @@
 		0623D8892851DAA800ED604B /* day7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = day7.swift; sourceTree = "<group>"; };
 		0623D88B2851DAB000ED604B /* day7_example.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day7_example.txt; sourceTree = "<group>"; };
 		0623D88C2851DAB800ED604B /* day7_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day7_input.txt; sourceTree = "<group>"; };
+		0623D8902852285C00ED604B /* day8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = day8.swift; sourceTree = "<group>"; };
+		0623D8922852286300ED604B /* day8_example.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day8_example.txt; sourceTree = "<group>"; };
+		0623D8932852286B00ED604B /* day8_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day8_input.txt; sourceTree = "<group>"; };
+		0623D8962852359600ED604B /* day8_single_example.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day8_single_example.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +133,7 @@
 				0623D87A2850DD3100ED604B /* Day5 */,
 				0623D8812851D25800ED604B /* Day6 */,
 				0623D8882851DA9B00ED604B /* Day7 */,
+				0623D88F2852285200ED604B /* Day8 */,
 			);
 			path = "AdventOfCode-2021";
 			sourceTree = "<group>";
@@ -209,6 +218,17 @@
 			path = Day7;
 			sourceTree = "<group>";
 		};
+		0623D88F2852285200ED604B /* Day8 */ = {
+			isa = PBXGroup;
+			children = (
+				0623D8902852285C00ED604B /* day8.swift */,
+				0623D8922852286300ED604B /* day8_example.txt */,
+				0623D8962852359600ED604B /* day8_single_example.txt */,
+				0623D8932852286B00ED604B /* day8_input.txt */,
+			);
+			path = Day8;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -289,8 +309,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0623D8862851D28100ED604B /* day6_input.txt in Resources */,
+				0623D8952852287100ED604B /* day8_input.txt in Resources */,
 				0623D8802850DD6200ED604B /* day5_input.txt in Resources */,
+				0623D897285235D100ED604B /* day8_single_example.txt in Resources */,
 				060906322848C6070030C052 /* day3_example.txt in Resources */,
+				0623D8942852287100ED604B /* day8_example.txt in Resources */,
 				0623D87F2850DD6200ED604B /* day5_example.txt in Resources */,
 				0623D88E2851DABB00ED604B /* day7_example.txt in Resources */,
 				06090639284907AA0030C052 /* day4_input.txt in Resources */,
@@ -319,6 +342,7 @@
 				0623D8832851D26700ED604B /* day6.swift in Sources */,
 				060906312848C4E70030C052 /* BinaryUtils.swift in Sources */,
 				060906262847C47C0030C052 /* day2.swift in Sources */,
+				0623D8912852285C00ED604B /* day8.swift in Sources */,
 				0609062D2848C1790030C052 /* day3.swift in Sources */,
 				060906072847BBDE0030C052 /* main.swift in Sources */,
 				0623D87C2850DD3D00ED604B /* day5.swift in Sources */,
