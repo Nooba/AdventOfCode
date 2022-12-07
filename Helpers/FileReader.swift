@@ -35,8 +35,10 @@ struct FileReader {
         return content.filter { !$0.isEmpty }
     }
 
-    func getGroupedLines() -> [[String]] {
-        let content = fileContent.components(separatedBy: CharacterSet.newlines).map { $0.trimmingCharacters(in: .whitespaces) }
+    func getGroupedLines(_ trim: Bool = true) -> [[String]] {
+        let content = fileContent
+            .components(separatedBy: CharacterSet.newlines)
+            .map { trim ? $0.trimmingCharacters(in: .whitespaces) : $0 }
         let initialArray: [[String]] = [[]]
         let result = content.reduce(into: initialArray) { partialResult, next in
             var previous = partialResult.last ?? []
@@ -44,6 +46,24 @@ struct FileReader {
                 partialResult.append([])
                 return
             }
+            previous.append(next)
+            partialResult[partialResult.count-1] = previous
+        }
+        return result.dropLast()
+    }
+
+    func getGroupedLinesByCount(_ count: Int) -> [[String]] {
+        let content = fileContent.components(separatedBy: CharacterSet.newlines).map { $0.trimmingCharacters(in: .whitespaces) }
+        let initialArray: [[String]] = [[]]
+        var counter = 0
+        let result = content.reduce(into: initialArray) { partialResult, next in
+            var previous = partialResult.last ?? []
+            guard counter < count else {
+                partialResult.append([next])
+                counter = 1
+                return
+            }
+            counter += 1
             previous.append(next)
             partialResult[partialResult.count-1] = previous
         }
