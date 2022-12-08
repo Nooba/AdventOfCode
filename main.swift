@@ -7,4 +7,4 @@
 
 import Foundation
 
-print(try day1_2015_B())
+print(try day2_2015_B())
