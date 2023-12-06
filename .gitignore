@@ -1,3 +1,4 @@
+
 # Xcode
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
@@ -83,3 +84,5 @@ BuildSettings/**/TargetEnvironment.xcconfig
 vendor/
 Packages/
 ci_derived_data/
+
+*_input.txt
