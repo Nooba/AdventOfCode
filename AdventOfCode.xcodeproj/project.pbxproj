@@ -93,6 +93,9 @@
 		1AF79C5D2B1F8269009422C6 /* day5_2023_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AF79C5A2B1F8269009422C6 /* day5_2023_input.txt */; };
 		1AF79C5E2B1F8269009422C6 /* day5_2023_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AF79C5B2B1F8269009422C6 /* day5_2023_example.txt */; };
 		1AF79C602B1F8272009422C6 /* day5_2023.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF79C5C2B1F8269009422C6 /* day5_2023.swift */; };
+		1AF79C662B20AA08009422C6 /* day6_2023_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AF79C632B20AA08009422C6 /* day6_2023_example.txt */; };
+		1AF79C672B20AA08009422C6 /* day6_2023_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AF79C642B20AA08009422C6 /* day6_2023_input.txt */; };
+		1AF79C682B20AA2B009422C6 /* day6_2023.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF79C622B20AA08009422C6 /* day6_2023.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -196,6 +199,9 @@
 		1AF79C5A2B1F8269009422C6 /* day5_2023_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day5_2023_input.txt; sourceTree = "<group>"; };
 		1AF79C5B2B1F8269009422C6 /* day5_2023_example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day5_2023_example.txt; sourceTree = "<group>"; };
 		1AF79C5C2B1F8269009422C6 /* day5_2023.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day5_2023.swift; sourceTree = "<group>"; };
+		1AF79C622B20AA08009422C6 /* day6_2023.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day6_2023.swift; sourceTree = "<group>"; };
+		1AF79C632B20AA08009422C6 /* day6_2023_example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day6_2023_example.txt; sourceTree = "<group>"; };
+		1AF79C642B20AA08009422C6 /* day6_2023_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day6_2023_input.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -504,6 +510,7 @@
 				1AF79C4A2B1F45F0009422C6 /* Day3 */,
 				1AF79C512B1F668F009422C6 /* Day4 */,
 				1AF79C592B1F8269009422C6 /* Day5 */,
+				1AF79C612B20AA08009422C6 /* Day6 */,
 			);
 			path = "AdventOfCode-2023";
 			sourceTree = "<group>";
@@ -559,6 +566,16 @@
 				1AF79C5A2B1F8269009422C6 /* day5_2023_input.txt */,
 			);
 			path = Day5;
+			sourceTree = "<group>";
+		};
+		1AF79C612B20AA08009422C6 /* Day6 */ = {
+			isa = PBXGroup;
+			children = (
+				1AF79C622B20AA08009422C6 /* day6_2023.swift */,
+				1AF79C632B20AA08009422C6 /* day6_2023_example.txt */,
+				1AF79C642B20AA08009422C6 /* day6_2023_input.txt */,
+			);
+			path = Day6;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -658,6 +675,7 @@
 				1AF79C472B1F4595009422C6 /* day1_2023_input.txt in Resources */,
 				0627DF1C29408CE000B1A034 /* day7_2022_input.txt in Resources */,
 				0623D8942852287100ED604B /* day8_example.txt in Resources */,
+				1AF79C662B20AA08009422C6 /* day6_2023_example.txt in Resources */,
 				0627DF07293E046300B1A034 /* day4_2022_input.txt in Resources */,
 				0627DF222941E4B900B1A034 /* day8_2022_input.txt in Resources */,
 				0627DF2E2942429400B1A034 /* day1_2015_example.txt in Resources */,
@@ -692,6 +710,7 @@
 				0627DEFA2939FE4600B1A034 /* day2_2022_example.txt in Resources */,
 				0623D88D2851DABB00ED604B /* day7_input.txt in Resources */,
 				1AF79C452B1F4595009422C6 /* day1_2023_example_B.txt in Resources */,
+				1AF79C672B20AA08009422C6 /* day6_2023_input.txt in Resources */,
 				0627DEF92939FE4600B1A034 /* day2_2022_input.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -719,6 +738,7 @@
 				0623D8832851D26700ED604B /* day6.swift in Sources */,
 				060906312848C4E70030C052 /* BinaryUtils.swift in Sources */,
 				060906262847C47C0030C052 /* day2.swift in Sources */,
+				1AF79C682B20AA2B009422C6 /* day6_2023.swift in Sources */,
 				0627DF14293FA9B900B1A034 /* day6_2022.swift in Sources */,
 				1AF79C442B1F457F009422C6 /* day1_2023.swift in Sources */,
 				0623D8912852285C00ED604B /* day8.swift in Sources */,
