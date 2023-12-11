@@ -66,8 +66,16 @@ private class Node: Equatable {
         case start
     }
 
+    enum Status {
+        case unknown
+        case outside
+        case inside
+        case limit
+    }
+
     let type: NodeType
     var distance = -1
+    var status: Status = .unknown
 
     init(string: String) throws {
         switch string {
@@ -80,6 +88,7 @@ private class Node: Equatable {
                 throw AoCError.wrongFormat
             }
             self.type = .pipe(pipe)
+            self.status = .limit
         }
     }
 
@@ -98,11 +107,14 @@ private class Node: Equatable {
         switch self.type {
         case .ground:
             return "."
-        case .pipe(_):
-            return "\(distance)"
-        case .start:
-            return "S"
+        case .pipe(_), .start:
+            return distance == -1 ? "!" : "?"
+//            return "\(distance)"
         }
+    }
+
+    var part2Map: String {
+        distance == -2 ? "I" : "."
     }
 
     var goesDown: Bool {
@@ -182,6 +194,12 @@ private class Map: CustomStringConvertible {
         }.joined(separator: "\n")
     }
 
+    var part2Map: String {
+        return rows.map { row in
+            return row.nodes.map { $0.part2Map }.joined()
+        }.joined(separator: "\n")
+    }
+
     subscript(y: Int) -> Row? {
         rows[safe: y]
     }
@@ -258,6 +276,7 @@ private func process(map: Map) -> Int {
         if let found { rowStartIndex = found }
         return found != nil
     }!
+    map[(rowStartIndex, columnStartIndex)]?.distance = 0
     let starts = findAccessiblesNodesFromOrigin(map, origin: (rowStartIndex, columnStartIndex))
     var processDone = false
     var currentDistance = 1
@@ -302,12 +321,65 @@ func day10_2023_A() throws -> Int {
 
 // MARK: - Part 2
 
-private func parseLineSecondPart(_ line: String) -> [Int] {
-    return parseLine(line).reversed()
+private func processNest(_ map: Map) -> Int {
+//    (0..<map.rows.count).forEach { yIndex in
+//        (0..<map.rows[0].nodes.count).forEach { xIndex in
+//            print((xIndex, yIndex))
+    computeNestNode(position: (0, 0), map: map)
+//        }
+//    }
+    return map.rows.map { $0.nodes.filter { $0.distance == -1 }.count }.reduce(0, +)
+}
+
+
+private func computeNestNode(position: (Int, Int), map: Map) {
+    guard let currentNode = map[position], currentNode.distance == -1 else {
+        return
+    }
+    currentNode.distance = -2
+    let topPosition = (position.0, position.1 - 1)
+    computeNestNode(position: topPosition, map: map)
+    let leftPosition = (position.0 - 1, position.1)
+    computeNestNode(position: leftPosition, map: map)
+    let bottomPosition = (position.0, position.1 + 1)
+    computeNestNode(position: bottomPosition, map: map)
+    let rightPosition = (position.0 + 1, position.1)
+    computeNestNode(position: rightPosition, map: map)
+}
+
+private enum Direction {
+    case top
+    case bottom
+    case left
+    case right
+}
+
+private func processSecondPart(_ map: Map) -> Int {
+    (0..<map.rows.count).forEach { yIndex in
+        (0..<map.rows[0].nodes.count).forEach { xIndex in
+            let currentNode = map[(xIndex, yIndex)]!
+            guard currentNode.type == .ground else {
+                return
+            }
+            let leftPipesCount = (0..<xIndex).map { map[($0, yIndex)] }.compactMap { $0 }.filter { $0.distance >= 0 }.count
+            let topPipesCount = (0..<yIndex).map { map[(xIndex, $0)] }.compactMap { $0 }.filter { $0.distance >= 0 }.count
+            if leftPipesCount % 2 == 1 && topPipesCount % 2 == 1 {
+                currentNode.distance = -2
+            }
+        }
+    }
+    print(map.part2Map)
+    return map.rows.map { $0.nodes.filter { $0.distance == -2 }.count }.reduce(0, +)
 }
 
 func day10_2023_B() throws -> Int {
-    let lines = try FileReader(filename: "day10_2023_input").getLines()
-    let inputs = lines.map(parseLineSecondPart(_:))
-    return -1
+    let lines = try FileReader(filename: "day10_2023_example").getLines()
+    let map = try Map(rowsString: lines)
+    _ = process(map: map)
+    return processSecondPart(map)
 }
+
+// Current issue:  We need to take into account the following
+/**
+ In fact, there doesn't even need to be a full tile path to the outside for tiles to count as outside the loop - squeezing between pipes is also allowed! Here, I is still within the loop and O is still outside the loop:
+ */
