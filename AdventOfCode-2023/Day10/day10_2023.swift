@@ -73,7 +73,7 @@ private class Node: Equatable {
         case limit
     }
 
-    let type: NodeType
+    var type: NodeType
     var distance = -1
     var status: Status = .unknown
 
@@ -213,23 +213,45 @@ private func parseLine(_ line: String) -> [Int] {
     return line.components(separatedBy: .whitespaces).compactMap { Int($0) }
 }
 
-private func findAccessiblesNodesFromOrigin(_ map: Map, origin: (Int, Int)) -> [(Int, Int)] {
+private func findAccessiblesNodesFromOrigin(_ map: Map, origin: (Int, Int)) throws -> [(Int, Int)] {
     let top = (origin.0, origin.1 - 1)
     let left = (origin.0 - 1, origin.1)
     let right = (origin.0 + 1, origin.1)
     let bottom = (origin.0, origin.1 + 1)
     var found: [(Int, Int)] = []
+    var directions: [Direction] = []
     if let topNode = map[top.1]?[top.0], topNode.goesDown {
         found.append(top)
+        directions.append(.top)
     }
     if let bottomNode = map[bottom.1]?[bottom.0], bottomNode.goesTop {
         found.append(bottom)
+        directions.append(.bottom)
     }
-    if let rightNode = map[right.1]?[right.0], rightNode.goesRight {
+    if let rightNode = map[right.1]?[right.0], rightNode.goesLeft {
         found.append(right)
+        directions.append(.right)
     }
-    if let leftNode = map[left.1]?[left.0], leftNode.goesLeft {
+    if let leftNode = map[left.1]?[left.0], leftNode.goesRight {
         found.append(left)
+        directions.append(.left)
+    }
+    guard directions.count == 2 else { throw AoCError.wrongFormat }
+    switch (directions[0], directions[1]) {
+    case (.top, .bottom):
+        map[origin]?.type = .pipe(.vertical)
+    case (.top, .left):
+        map[origin]?.type = .pipe(.NW)
+    case (.top, .right):
+        map[origin]?.type = .pipe(.NE)
+    case (.bottom, .right):
+        map[origin]?.type = .pipe(.SE)
+    case (.bottom, .left):
+        map[origin]?.type = .pipe(.SW)
+    case (.right, .left):
+        map[origin]?.type = .pipe(.horizontal)
+    default:
+        throw AoCError.wrongFormat
     }
     return found
 }
@@ -269,7 +291,7 @@ private func nextNodePosition(previousPosition: (Int, Int), currentPosition: (In
     }
 }
 
-private func process(map: Map) -> Int {
+private func process(map: Map) throws -> Int {
     var (rowStartIndex, columnStartIndex) = (-1, -1)
     columnStartIndex = map.rows.firstIndex { row in
         let found = row.nodes.firstIndex { $0.type == .start }
@@ -277,7 +299,7 @@ private func process(map: Map) -> Int {
         return found != nil
     }!
     map[(rowStartIndex, columnStartIndex)]?.distance = 0
-    let starts = findAccessiblesNodesFromOrigin(map, origin: (rowStartIndex, columnStartIndex))
+    let starts = try findAccessiblesNodesFromOrigin(map, origin: (rowStartIndex, columnStartIndex))
     var processDone = false
     var currentDistance = 1
     var previousLeft = (rowStartIndex, columnStartIndex)
@@ -316,7 +338,7 @@ private func process(map: Map) -> Int {
 func day10_2023_A() throws -> Int {
     let lines = try FileReader(filename: "day10_2023_input").getLines()
     let map = try Map(rowsString: lines)
-    return process(map: map)
+    return try process(map: map)
 }
 
 // MARK: - Part 2
@@ -358,24 +380,134 @@ private func processSecondPart(_ map: Map) -> Int {
     (0..<map.rows.count).forEach { yIndex in
         (0..<map.rows[0].nodes.count).forEach { xIndex in
             let currentNode = map[(xIndex, yIndex)]!
-            guard currentNode.type == .ground else {
+            guard currentNode.distance < 0 else {
                 return
             }
-            let leftPipesCount = (0..<xIndex).map { map[($0, yIndex)] }.compactMap { $0 }.filter { $0.distance >= 0 }.count
-            let topPipesCount = (0..<yIndex).map { map[(xIndex, $0)] }.compactMap { $0 }.filter { $0.distance >= 0 }.count
+            // Count either | or F+J or L+7
+            var previousPipe: Pipe? = nil
+            var count = 0
+            (0..<xIndex).map { map[($0, yIndex)] }.forEach { leftNode in
+                guard let leftNode else { return }
+                guard let pipe = leftNode.pipe, leftNode.distance >= 0 else {
+                    return
+                }
+                switch pipe {
+                case .vertical:
+                    count += 1
+                case .NE:
+                    if previousPipe == .SW {
+                        count += 1
+                        previousPipe = nil
+                        return
+                    }  else if previousPipe == nil {
+                        previousPipe = .NE
+                    } else {
+                        previousPipe = nil
+                    }
+                case .SW:
+                    if previousPipe == .NE {
+                        count += 1
+                        previousPipe = nil
+                        return
+                    } else if previousPipe == nil {
+                        previousPipe = .SW
+                    } else {
+                        previousPipe = nil
+                    }
+                case .SE:
+                    if previousPipe == .NW {
+                        count += 1
+                        previousPipe = nil
+                        return
+                    }  else if previousPipe == nil {
+                        previousPipe = .SE
+                    } else {
+                        previousPipe = nil
+                    }
+                case .NW:
+                    if previousPipe == .SE {
+                        count += 1
+                        previousPipe = nil
+                        return
+                    }  else if previousPipe == nil {
+                        previousPipe = .NW
+                    } else {
+                        previousPipe = nil
+                    }
+                default:
+                    break
+                }
+            }
+            let leftPipesCount = count
+            count = 0
+            previousPipe = nil
+            (0..<yIndex).map { map[(xIndex, $0)] }.compactMap { $0 }.forEach { node in
+                guard let pipe = node.pipe, node.distance >= 0 else {
+                    return
+                }
+                switch pipe {
+                case .horizontal:
+                    count += 1
+                case .NE:
+                    if previousPipe == .SW {
+                        count += 1
+                        previousPipe = nil
+                        return
+                    } else if previousPipe == nil {
+                        previousPipe = .NE
+                    } else {
+                        previousPipe = nil
+                    }
+                case .SW:
+                    if previousPipe == .NE {
+                        count += 1
+                        previousPipe = nil
+                        return
+                    } else if previousPipe == nil {
+                        previousPipe = .SW
+                    } else {
+                        previousPipe = nil
+                    }
+                case .SE:
+                    if previousPipe == .NW {
+                        count += 1
+                        previousPipe = nil
+                        return
+                    } else if previousPipe == nil {
+                        previousPipe = .SE
+                    } else {
+                        previousPipe = nil
+                    }
+                case .NW:
+                    if previousPipe == .SE {
+                        count += 1
+                        previousPipe = nil
+                        return
+                    } else if previousPipe == nil {
+                        previousPipe = .NW
+                    } else {
+                        previousPipe = nil
+                    }
+                default:
+                    break
+                }
+            }
+            let topPipesCount = count
             if leftPipesCount % 2 == 1 && topPipesCount % 2 == 1 {
                 currentNode.distance = -2
             }
         }
     }
+    print(map.distanceMap)
+    print("-----")
     print(map.part2Map)
     return map.rows.map { $0.nodes.filter { $0.distance == -2 }.count }.reduce(0, +)
 }
 
 func day10_2023_B() throws -> Int {
-    let lines = try FileReader(filename: "day10_2023_example").getLines()
+    let lines = try FileReader(filename: "day10_2023_input").getLines()
     let map = try Map(rowsString: lines)
-    _ = process(map: map)
+    _ = try process(map: map)
     return processSecondPart(map)
 }
 
