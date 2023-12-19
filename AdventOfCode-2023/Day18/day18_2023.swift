@@ -208,8 +208,27 @@ func day18_2023_A() throws -> Int {
 
 // MARK: - Part 2
 
+private func stringToDirection(character: Character) throws -> Instruction.Direction {
+    switch character {
+    case "0": return .right
+    case "1": return .down
+    case "2": return .left
+    case "3": return .up
+    default: throw AoCError.wrongFormat
+    }
+}
+
+private func processSecondPart(_ line: String) throws -> Instruction {
+    return try parseRegexp(line, capturePattern: #"(D|U|L|R) (\d+) \(#(.+)\)"#) { groups in
+        let hexString = groups[2]
+        let direction = try stringToDirection(character: hexString.last!)
+        let distance = String(hexString.dropLast()).hexaToDecimal
+        return Instruction(direction: direction, distance: distance, hexColor: "")
+    }
+}
+
 func day18_2023_B() throws -> Int {
     let lines = try FileReader(filename: "day18_2023_example").getLines()
-    _ = try lines.map(process(_:))
-    return -1
+    let instructions = try lines.map(processSecondPart(_:))
+    return try process(instructions: instructions)
 }
