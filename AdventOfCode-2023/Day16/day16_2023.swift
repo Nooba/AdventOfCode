@@ -100,7 +100,7 @@ private var beams: [Beam] = [Beam(direction: .right, position: (0, 0))]
 private var map: Map!
 
 private func stepBeams() {
-    print(beams)
+//    print(beams)
     beams = beams.flatMap { beam -> [Beam] in
         let position = beam.position
         guard var node = map[position], !node.visitingDirections.contains(beam.direction) else {
@@ -188,7 +188,7 @@ private func stepRightBeam(at position: Position, of type: Node.NodeType) -> [Be
 
 private func process(_ lines: [String]) throws -> Int {
     map = try Map(strings: lines)
-    print(map!)
+//    print(map!)
     while !beams.isEmpty {
         stepBeams()
     }
@@ -205,6 +205,23 @@ func day16_2023_A() throws -> Int {
 
 func day16_2023_B() throws -> Int {
     let lines = try FileReader(filename: "day16_2023_input").getLines()
-    let results = try process(lines)
-    return results
+    map = try Map(strings: lines)
+    let maxY = map.rows.count
+    let maxX = map.rows[0].nodes.count
+    var yResults = try (0..<maxY).flatMap { y in
+        beams = [Beam(direction: .right, position: (0, y))]
+        let leftValue = try process(lines)
+        beams = [Beam(direction: .left, position: (maxX, y))]
+        let rightValue = try process(lines)
+        return [leftValue, rightValue]
+    }
+    let xResults = try (0..<maxX).flatMap { x in
+        beams = [Beam(direction: .down, position: (x, 0))]
+        let topValue = try process(lines)
+        beams = [Beam(direction: .up, position: (x, maxY))]
+        let bottomValue = try process(lines)
+        return [topValue, bottomValue]
+    }
+    yResults.append(contentsOf: xResults)
+    return yResults.max()!
 }
