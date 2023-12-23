@@ -182,12 +182,155 @@ func day19_2023_A() throws -> Int {
 
 // MARK: - Part 2
 
-private func processSecondPart(_ line: String) throws -> Int {
-    return -1
+private class TheoricalFlow: CustomStringConvertible {
+    var xMin = 1
+    var xMax = 4000
+    var mMin = 1
+    var mMax = 4000
+    var aMin = 1
+    var aMax = 4000
+    var sMin = 1
+    var sMax = 4000
+    var nextDestination: String
+
+    init(xMin: Int = 1,
+         xMax: Int = 4000,
+         mMin: Int = 1,
+         mMax: Int = 4000,
+         aMin: Int = 1,
+         aMax: Int = 4000,
+         sMin: Int = 1,
+         sMax: Int = 4000,
+         nextDestination: String) {
+        self.xMin = xMin
+        self.xMax = xMax
+        self.mMin = mMin
+        self.mMax = mMax
+        self.aMin = aMin
+        self.aMax = aMax
+        self.sMin = sMin
+        self.sMax = sMax
+        self.nextDestination = nextDestination
+    }
+
+    var description: String {
+        return "x:[\(xMin), \(xMax)], m:[\(mMin), \(mMax)], a:[\(aMin), \(aMax)], s:[\(sMin), \(sMax)] -> \(nextDestination)"
+    }
+
+    var acceptedRatingsCount: Int {
+        return (xMax - xMin + 1) * (mMax - mMin + 1) * (aMax - aMin + 1) * (sMax - sMin + 1)
+    }
+
+    func copy(rule: Rule) -> TheoricalFlow? {
+        switch rule.type {
+        case .comparison(let keyPath, let comparisonType, let int, let string):
+            switch keyPath {
+            case \.x:
+                switch comparisonType {
+                case .gt:
+                    return copy(xMin: int + 1, nextDestination: string)
+                case .lt:
+                    return copy(xMax: int - 1, nextDestination: string)
+                }
+            case \.m:
+                switch comparisonType {
+                case .gt:
+                    return copy(mMin: int + 1, nextDestination: string)
+                case .lt:
+                    return copy(mMax: int - 1, nextDestination: string)
+                }
+            case \.a:
+                switch comparisonType {
+                case .gt:
+                    return copy(aMin: int + 1, nextDestination: string)
+                case .lt:
+                    return copy(aMax: int - 1, nextDestination: string)
+                }
+            case \.s:
+                switch comparisonType {
+                case .gt:
+                    return copy(sMin: int + 1, nextDestination: string)
+                case .lt:
+                    return copy(sMax: int - 1, nextDestination: string)
+                }
+            default:
+                fatalError()
+            }
+        case .goto(let string):
+            return copy(nextDestination: string)
+        case .accept:
+            return copy(nextDestination: "A")
+        case .reject:
+            return nil
+        }
+    }
+
+    func copy(xMin: Int? = nil,
+              xMax: Int? = nil,
+              mMin: Int? = nil,
+              mMax: Int? = nil,
+              aMin: Int? = nil,
+              aMax: Int? = nil,
+              sMin: Int? = nil,
+              sMax: Int? = nil,
+              nextDestination: String) -> TheoricalFlow? {
+        let newFlow = TheoricalFlow(
+            xMin: xMin ?? self.xMin,
+            xMax: xMax ?? self.xMax,
+            mMin: mMin ?? self.mMin,
+            mMax: mMax ?? self.mMax,
+            aMin: aMin ?? self.aMin,
+            aMax: aMax ?? self.aMax,
+            sMin: sMin ?? self.sMin,
+            sMax: sMax ?? self.sMax,
+            nextDestination: nextDestination)
+        guard newFlow.isNotRejected else {
+            return nil
+        }
+        return newFlow
+    }
+
+    var isNotRejected: Bool {
+        return nextDestination != "R"
+        && xMax >= xMin
+        && mMax >= mMin
+        && aMax >= aMin
+        && sMax >= sMin
+    }
+
+    var isAccepted: Bool {
+        return nextDestination == "A"
+    }
 }
 
 func day19_2023_B() throws -> Int {
-    let lines = try FileReader(filename: "day19_2023_example").getLines()
-    let results = try lines.map(processSecondPart(_:))
-    return -1
+    let lines = try FileReader(filename: "day19_2023_example").getGroupedLines()
+    let workflows = lines[0].map { Workflow(string: $0) }
+    var workflowHash = [String: Workflow]()
+    workflows.forEach { workflowHash[$0.label] = $0 }
+    var flows = [TheoricalFlow(nextDestination: "in")]
+    var acceptedFlows: [TheoricalFlow] = []
+    print(flows)
+    while flows.count > 0 {
+        flows = flows.flatMap { flow in
+            guard let nextWorkflow = workflowHash[flow.nextDestination] else {
+                fatalError()
+            }
+            let newFlows = nextWorkflow.rules.compactMap { rule -> TheoricalFlow? in
+                guard let updatedFlow = flow.copy(rule: rule) else {
+                    return nil
+                }
+                if updatedFlow.isAccepted {
+                    acceptedFlows.append(updatedFlow)
+                    return nil
+                }
+                return updatedFlow
+            }
+            return newFlows
+        }
+        print(flows)
+    }
+    return acceptedFlows.map { $0.acceptedRatingsCount }.reduce(0, +)
+    // wrong answer:    496_534_091_000_000, some flows cover the same values.
+    // expected answer: 167_409_079_868_000
 }
