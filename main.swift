@@ -7,4 +7,4 @@
 
 import Foundation
 
-print(try day20_2023_A())
+print(try day21_2023_A())
