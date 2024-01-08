@@ -87,6 +87,9 @@
 		1AD07A812B4BFB79004ADF14 /* day6_2015_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AD07A7E2B4BFB79004ADF14 /* day6_2015_input.txt */; };
 		1AD07A832B4BFB79004ADF14 /* day6_2015_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AD07A802B4BFB79004ADF14 /* day6_2015_example.txt */; };
 		1AD07A842B4BFB7F004ADF14 /* day6_2015.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD07A7F2B4BFB79004ADF14 /* day6_2015.swift */; };
+		1AD07A8A2B4C0203004ADF14 /* day7_2015_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AD07A872B4C0203004ADF14 /* day7_2015_input.txt */; };
+		1AD07A8B2B4C0203004ADF14 /* day7_2015_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AD07A882B4C0203004ADF14 /* day7_2015_example.txt */; };
+		1AD07A8C2B4C020A004ADF14 /* day7_2015.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD07A862B4C0203004ADF14 /* day7_2015.swift */; };
 		1AE308082B26278000ADE783 /* day9_2023_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AE308052B26278000ADE783 /* day9_2023_input.txt */; };
 		1AE308092B26278000ADE783 /* day9_2023_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AE308062B26278000ADE783 /* day9_2023_example.txt */; };
 		1AE3080A2B2627C800ADE783 /* day9_2023.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE308042B26278000ADE783 /* day9_2023.swift */; };
@@ -256,6 +259,9 @@
 		1AD07A7E2B4BFB79004ADF14 /* day6_2015_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day6_2015_input.txt; sourceTree = "<group>"; };
 		1AD07A7F2B4BFB79004ADF14 /* day6_2015.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day6_2015.swift; sourceTree = "<group>"; };
 		1AD07A802B4BFB79004ADF14 /* day6_2015_example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day6_2015_example.txt; sourceTree = "<group>"; };
+		1AD07A862B4C0203004ADF14 /* day7_2015.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day7_2015.swift; sourceTree = "<group>"; };
+		1AD07A872B4C0203004ADF14 /* day7_2015_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day7_2015_input.txt; sourceTree = "<group>"; };
+		1AD07A882B4C0203004ADF14 /* day7_2015_example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day7_2015_example.txt; sourceTree = "<group>"; };
 		1AE308042B26278000ADE783 /* day9_2023.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day9_2023.swift; sourceTree = "<group>"; };
 		1AE308052B26278000ADE783 /* day9_2023_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day9_2023_input.txt; sourceTree = "<group>"; };
 		1AE308062B26278000ADE783 /* day9_2023_example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day9_2023_example.txt; sourceTree = "<group>"; };
@@ -588,6 +594,7 @@
 				1AD07A6C2B4826B1004ADF14 /* Day4 */,
 				1AD07A742B482893004ADF14 /* Day5 */,
 				1AD07A7D2B4BFB79004ADF14 /* Day6 */,
+				1AD07A852B4C0203004ADF14 /* Day7 */,
 			);
 			path = "AdventOfCode-2015";
 			sourceTree = "<group>";
@@ -672,6 +679,16 @@
 				1AD07A7E2B4BFB79004ADF14 /* day6_2015_input.txt */,
 			);
 			path = Day6;
+			sourceTree = "<group>";
+		};
+		1AD07A852B4C0203004ADF14 /* Day7 */ = {
+			isa = PBXGroup;
+			children = (
+				1AD07A862B4C0203004ADF14 /* day7_2015.swift */,
+				1AD07A882B4C0203004ADF14 /* day7_2015_example.txt */,
+				1AD07A872B4C0203004ADF14 /* day7_2015_input.txt */,
+			);
+			path = Day7;
 			sourceTree = "<group>";
 		};
 		1AE308032B26278000ADE783 /* Day9 */ = {
@@ -1078,6 +1095,7 @@
 				0627DF16293FA9CD00B1A034 /* day6_2022_input.txt in Resources */,
 				0609063A284907AA0030C052 /* day4_example.txt in Resources */,
 				060906282847C5AD0030C052 /* day2_example.txt in Resources */,
+				1AD07A8B2B4C0203004ADF14 /* day7_2015_example.txt in Resources */,
 				0627DF232941E4B900B1A034 /* day8_2022_example.txt in Resources */,
 				1AE3083C2B2C491F00ADE783 /* day15_2023_example.txt in Resources */,
 				0627DF08293E046300B1A034 /* day4_2022_example.txt in Resources */,
@@ -1088,6 +1106,7 @@
 				0623D8872851D28100ED604B /* day6_example.txt in Resources */,
 				0687AAEF2853841D00BF0AAA /* day9_example.txt in Resources */,
 				1AE3085D2B3709CD00ADE783 /* day19_2023_input.txt in Resources */,
+				1AD07A8A2B4C0203004ADF14 /* day7_2015_input.txt in Resources */,
 				1AF79C3B2B1F26E2009422C6 /* day2_2023_example.txt in Resources */,
 				1AF79C552B1F668F009422C6 /* day4_2023_input.txt in Resources */,
 				1AE308112B27004800ADE783 /* day10_2023_example.txt in Resources */,
@@ -1163,6 +1182,7 @@
 				0687AAEC2853840C00BF0AAA /* day9.swift in Sources */,
 				1AF79C792B231FD3009422C6 /* day8_2023.swift in Sources */,
 				060906072847BBDE0030C052 /* main.swift in Sources */,
+				1AD07A8C2B4C020A004ADF14 /* day7_2015.swift in Sources */,
 				1AD07A842B4BFB7F004ADF14 /* day6_2015.swift in Sources */,
 				0627DF332942445000B1A034 /* day2_2015.swift in Sources */,
 				1AF79C712B221E23009422C6 /* day7_2023.swift in Sources */,
