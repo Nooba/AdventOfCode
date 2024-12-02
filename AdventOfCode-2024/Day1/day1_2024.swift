@@ -27,3 +27,15 @@ func day1_2024_A() throws -> Int {
     }
     return result
 }
+
+func day1_2024_B() throws -> Int {
+    let lines = try FileReader(filename: "day1_2024_input").getLines()
+    let numbers = try lines.map(parseLine(_:))
+    let lefts = numbers.map { $0.0 }.sorted()
+    let rights = numbers.map { $0.1 }.sorted()
+    guard lefts.count == rights.count else { throw AoCError.wrongFormat }
+    let similarityScore = lefts.map { left in
+        return left * rights.filter { left == $0 }.count
+    }
+    return similarityScore.reduce(0, +)
+}
