@@ -62,6 +62,9 @@
 		06D461772CFDB2A500FFEC7D /* day2_2024_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 06D461732CFDB2A400FFEC7D /* day2_2024_example.txt */; };
 		06D461782CFDB2A500FFEC7D /* day2_2024_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 06D461742CFDB2A400FFEC7D /* day2_2024_input.txt */; };
 		06D4617A2CFDB2B100FFEC7D /* day2_2024.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D461752CFDB2A400FFEC7D /* day2_2024.swift */; };
+		06D461992CFF092F00FFEC7D /* day3_2024_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 06D461952CFF092F00FFEC7D /* day3_2024_example.txt */; };
+		06D4619A2CFF092F00FFEC7D /* day3_2024_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 06D461962CFF092F00FFEC7D /* day3_2024_input.txt */; };
+		06D4619D2CFF093700FFEC7D /* day3_2024.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D461972CFF092F00FFEC7D /* day3_2024.swift */; };
 		1A0B36D22B4D4AE80084F967 /* day9_2015_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1A0B36CF2B4D4AE70084F967 /* day9_2015_example.txt */; };
 		1A0B36D32B4D4AEE0084F967 /* day9_2015.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0B36CE2B4D4AE70084F967 /* day9_2015.swift */; };
 		1A0B36D72B4D6A8F0084F967 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0B36D62B4D6A8F0084F967 /* Algorithms */; };
@@ -219,6 +222,9 @@
 		06D461732CFDB2A400FFEC7D /* day2_2024_example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day2_2024_example.txt; sourceTree = "<group>"; };
 		06D461742CFDB2A400FFEC7D /* day2_2024_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day2_2024_input.txt; sourceTree = "<group>"; };
 		06D461752CFDB2A400FFEC7D /* day2_2024.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day2_2024.swift; sourceTree = "<group>"; };
+		06D461952CFF092F00FFEC7D /* day3_2024_example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day3_2024_example.txt; sourceTree = "<group>"; };
+		06D461962CFF092F00FFEC7D /* day3_2024_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day3_2024_input.txt; sourceTree = "<group>"; };
+		06D461972CFF092F00FFEC7D /* day3_2024.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day3_2024.swift; sourceTree = "<group>"; };
 		1A0B36CD2B4D4AE70084F967 /* day9_2015_input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day9_2015_input.txt; sourceTree = "<group>"; };
 		1A0B36CE2B4D4AE70084F967 /* day9_2015.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = day9_2015.swift; sourceTree = "<group>"; };
 		1A0B36CF2B4D4AE70084F967 /* day9_2015_example.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = day9_2015_example.txt; sourceTree = "<group>"; };
@@ -632,6 +638,7 @@
 			children = (
 				06D4616C2CFDADAD00FFEC7D /* Day1 */,
 				06D461762CFDB2A400FFEC7D /* Day2 */,
+				06D461982CFF092F00FFEC7D /* Day3 */,
 			);
 			path = "AdventOfCode-2024";
 			sourceTree = "<group>";
@@ -656,6 +663,16 @@
 			name = Day2;
 			path = "AdventOfCode-2024/Day2";
 			sourceTree = SOURCE_ROOT;
+		};
+		06D461982CFF092F00FFEC7D /* Day3 */ = {
+			isa = PBXGroup;
+			children = (
+				06D461972CFF092F00FFEC7D /* day3_2024.swift */,
+				06D461952CFF092F00FFEC7D /* day3_2024_example.txt */,
+				06D461962CFF092F00FFEC7D /* day3_2024_input.txt */,
+			);
+			path = Day3;
+			sourceTree = "<group>";
 		};
 		1A0B36CC2B4D4AE70084F967 /* Day9 */ = {
 			isa = PBXGroup;
@@ -1095,6 +1112,7 @@
 				1AE3085C2B3709CD00ADE783 /* day19_2023_example.txt in Resources */,
 				1AF79C7B2B232517009422C6 /* day8_2023_example_part_2.txt in Resources */,
 				0627DF3E294351F300B1A034 /* day9_2022_example.txt in Resources */,
+				06D461992CFF092F00FFEC7D /* day3_2024_example.txt in Resources */,
 				1AF79C462B1F4595009422C6 /* day1_2023_example.txt in Resources */,
 				1AF79C762B231FCD009422C6 /* day8_2023_example.txt in Resources */,
 				1AE308182B273BD400ADE783 /* day11_2023_example.txt in Resources */,
@@ -1118,6 +1136,7 @@
 				1AF79C5E2B1F8269009422C6 /* day5_2023_example.txt in Resources */,
 				1AE3086E2B3842D500ADE783 /* day21_2023_example.txt in Resources */,
 				0627DF0F293E465E00B1A034 /* day5_2022_example.txt in Resources */,
+				06D4619A2CFF092F00FFEC7D /* day3_2024_input.txt in Resources */,
 				1AD07A782B482893004ADF14 /* day5_2015_example.txt in Resources */,
 				1A0B36DC2B4D78C60084F967 /* day10_2015_example.txt in Resources */,
 				1AF79C572B1F668F009422C6 /* day4_2023_example.txt in Resources */,
@@ -1193,6 +1212,7 @@
 				1AF79C4E2B1F45F0009422C6 /* day3_2023.swift in Sources */,
 				0627DF1B29408CD300B1A034 /* day7_2022.swift in Sources */,
 				1AE308222B29A54500ADE783 /* day12_2023.swift in Sources */,
+				06D4619D2CFF093700FFEC7D /* day3_2024.swift in Sources */,
 				1AE308552B31A05400ADE783 /* day18_2023.swift in Sources */,
 				1AF79C582B1F669E009422C6 /* day4_2023.swift in Sources */,
 				1AE3086F2B3842DF00ADE783 /* day21_2023.swift in Sources */,
@@ -1345,7 +1365,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3B7M57SZUM;
+				DEVELOPMENT_TEAM = MCTD9RR72H;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1356,7 +1376,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 3B7M57SZUM;
+				DEVELOPMENT_TEAM = MCTD9RR72H;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1369,7 +1389,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3B7M57SZUM;
+				DEVELOPMENT_TEAM = MCTD9RR72H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSPrincipalClass = "";
@@ -1389,7 +1409,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 3B7M57SZUM;
+				DEVELOPMENT_TEAM = MCTD9RR72H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSPrincipalClass = "";
