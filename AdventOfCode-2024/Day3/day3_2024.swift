@@ -25,7 +25,7 @@ func day3_2024_A() throws -> Int {
 
 // MARK: - Part B
 
-var enabled = true
+fileprivate var enabled = true
 
 private func parseLinePartB(_ line: String) throws -> Int {
     var result = 0
