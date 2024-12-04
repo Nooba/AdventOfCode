@@ -113,26 +113,69 @@ func day4_2024_A() throws -> Int {
 
 // MARK: - Part B
 
-fileprivate var enabled = true
-
-private func parseLinePartB(_ line: String) throws -> Int {
-    var result = 0
-    try parseRegexp(line, capturePattern: #"mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)"#, getAllMatches: true) { groups in
-        let mapped = groups.compactMap { group -> String? in
-            if group == "do()" {
-                enabled = true
-                return nil
-            } else if group == "don't()" {
-                enabled = false
-                return nil
-            } else if enabled {
-                return group.replacingOccurrences(of: "mul(", with: "").replacingOccurrences(of: ")", with: "")
+extension Map {
+    func isXCrossesMas(at position: (Int, Int)) -> Bool {
+        let (x,y) = position
+        guard let cell = self[x, y] else { return false }
+        guard cell.value == "A" else { return false }
+        guard
+            let topLeft = self[x - 1, y - 1],
+            let topRight = self[x + 1, y - 1],
+            let downLeft = self[x - 1, y + 1],
+            let downRight = self[x + 1, y + 1],
+            [topLeft, topRight, downLeft, downRight].allSatisfy ({ $0.value == "M" || $0.value == "S" }) else {
+                return false
             }
-            return nil
+        if (topLeft.value == "M"
+            && topRight.value == "M"
+            && downLeft.value == "S"
+            && downRight.value == "S") {
+            // M - S
+            // - A -
+            // M - S
+            return true
         }
-        let components = mapped.map { $0.components(separatedBy: ",") }
-        let values = components.map { $0.map { Int($0)! }.reduce(1, *) }
-        result += values.reduce(0, +)
+        if (topLeft.value == "M"
+            && topRight.value == "S"
+            && downLeft.value == "M"
+            && downRight.value == "S") {
+            // M - M
+            // - A -
+            // S - S
+            return true
+        }
+        if (topLeft.value == "S"
+            && topRight.value == "S"
+            && downLeft.value == "M"
+            && downRight.value == "M") {
+            // S - M
+            // - A -
+            // S - M
+            return true
+        }
+        if (topLeft.value == "S"
+            && topRight.value == "M"
+            && downLeft.value == "S"
+            && downRight.value == "M") {
+            // S - M
+            // - A -
+            // S - M
+            return true
+        }
+        return false
+    }
+}
+
+private func processSecondpart(_ map: Map) -> Int {
+    var result = 0
+    (0...(map.maxY)).forEach { y in
+        (0...(map.maxX)).forEach { x in
+            let isCross = map.isXCrossesMas(at: (x, y))
+            result += isCross ? 1 : 0
+            if isCross {
+//                print("cross at :\(x), \(y)")
+            }
+        }
     }
     return result
 }
@@ -140,5 +183,6 @@ private func parseLinePartB(_ line: String) throws -> Int {
 
 func day4_2024_B() throws -> Int {
     let lines = try FileReader(filename: "day4_2024_input").getLines()
-    return try lines.map { try parseLinePartB($0) }.reduce(0, +)
+    let map = parseLines(lines)
+    return processSecondpart(map)
 }
