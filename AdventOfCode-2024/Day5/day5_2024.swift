@@ -55,7 +55,30 @@ func day5_2024_A() throws -> Int {
 
 // MARK: - Part B
 
+private func fixUpdateThroughReorder(line: String, orderedRules: [Pair]) -> Int {
+    let pages = line.components(separatedBy: ",").map { Int($0)! }
+    var printedPages = Set<Int>()
+    var newPages = [Int]()
+    var isDone = false
+//    print(pages)
+    while newPages.count < pages.count {
+        let nextPage = pages.first { page in
+            guard !newPages.contains(page) else { return false }
+            return orderedRules.allSatisfy { $0.last != page || newPages.contains($0.first) || !pages.contains($0.first) }
+        }
+        newPages.append(nextPage!)
+//        print(newPages)
+    }
+    return newPages[newPages.count / 2]
+}
+
 func day5_2024_B() throws -> Int {
-    let lines = try FileReader(filename: "day5_2024_input").getLines()
-    return -1
+    let lines = try FileReader(filename: "day5_2024_input").getGroupedLines()
+    let pairs = try lines[0].map { try parseDictionaryLine($0) }
+    let rules = Set<Pair>(pairs)
+    let wronglyOrdered = lines[1].filter { testUpdate(line: $0, rules: rules) == 0 }
+    let results = wronglyOrdered.map { fixUpdateThroughReorder(line: $0, orderedRules: pairs) }
+//    print(results)
+    return results.reduce(0, +)
+
 }
