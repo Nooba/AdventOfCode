@@ -40,7 +40,7 @@ private func testUpdate(line: String, rules: Set<Pair>) -> Int {
     return 0
 }
 
-struct Pair: Hashable {
+private struct Pair: Hashable {
     let first: Int
     let last: Int
 }
