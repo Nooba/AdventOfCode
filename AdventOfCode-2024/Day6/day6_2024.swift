@@ -20,12 +20,23 @@ private enum Direction: String, CaseIterable {
 }
 
 private class Cell {
+    let originalValue: String
     var value: String
     var isVisited: Bool
+    // Part B
+    var isLooping: Bool
+    var visitedDirections: [Direction]
 
-    init(value: String) {
+    init(originalValue: String,
+         value: String,
+         isVisited: Bool,
+         isLooping: Bool,
+         visitedDirections: [Direction]) {
         self.value = value
-        self.isVisited = false
+        self.isVisited = isVisited
+        self.isLooping = isLooping
+        self.visitedDirections = visitedDirections
+        self.originalValue = originalValue
     }
 
     var isBlocked: Bool {
@@ -35,6 +46,16 @@ private class Cell {
 //    var isGuard: Bool {
 //        return Direction.allCases.map { $0.rawValue }.contains(value)
 //    }
+
+    var copy: Cell {
+        return Cell(
+            originalValue: originalValue,
+            value: value,
+            isVisited: isVisited,
+            isLooping: isLooping,
+            visitedDirections: visitedDirections
+        )
+    }
 }
 
 private struct Map {
@@ -67,7 +88,6 @@ private struct Map {
 
     private func getNextValidPosition(from position: (Int, Int), direction: Direction) -> (Int, Int)? {
         let (x,y) = position
-        guard let cell = self[x, y] else { return nil }
         var nextDirection = direction
         var nextPosition = newPosition(from: position, direction: nextDirection)
         var newCell = self[nextPosition]
@@ -104,7 +124,7 @@ private func parseLines(_ lines: [String]) -> Map {
     let rows = lines.map { line in
         line.map { cell in
             let string = String(cell)
-            return Cell(value: string)
+            return Cell(originalValue: string, value: string, isVisited: false, isLooping: false, visitedDirections: [])
         }
     }
     return Map(rows: rows)
@@ -141,66 +161,78 @@ func day6_2024_A() throws -> Int {
 // MARK: - Part B
 
 extension Map {
-    func isXCrossesMas(at position: (Int, Int)) -> Bool {
+    func processSecondPart(at position: (Int, Int)?) -> (Int, Int)? {
+        guard let position else {
+            return nil
+        }
         let (x,y) = position
-        guard let cell = self[x, y] else { return false }
-        guard cell.value == "A" else { return false }
-        guard
-            let topLeft = self[x - 1, y - 1],
-            let topRight = self[x + 1, y - 1],
-            let downLeft = self[x - 1, y + 1],
-            let downRight = self[x + 1, y + 1],
-            [topLeft, topRight, downLeft, downRight].allSatisfy ({ $0.value == "M" || $0.value == "S" }) else {
-                return false
+        guard let cell = self[x, y], let direction = Direction(rawValue: cell.value) else {
+            return nil
+        }
+        return getNextValidPositionSecondPart(from: position, direction: direction)
+    }
+
+    private func getNextValidPositionSecondPart(from position: (Int, Int), direction: Direction) -> (Int, Int)? {
+        var nextDirection = direction
+        var nextPosition = newPosition(from: position, direction: nextDirection)
+        var newCell = self[nextPosition]
+        while newCell != nil, newCell!.isBlocked {
+            nextDirection = nextDirection.next
+            nextPosition = newPosition(from: position, direction: nextDirection)
+            newCell = self[nextPosition]
+        }
+        if newCell != nil, newCell!.visitedDirections.contains(nextDirection) {
+            newCell?.isLooping = true
+            return nil
+        }
+        newCell?.visitedDirections.append(nextDirection)
+        newCell?.value = nextDirection.rawValue
+//        print("next: \(nextPosition)")
+        return nextPosition
+    }
+
+    var copy: Map {
+        Map(rows: rows.map { row in
+            row.map { cell in
+                cell.copy
             }
-        if (topLeft.value == "M"
-            && topRight.value == "M"
-            && downLeft.value == "S"
-            && downRight.value == "S") {
-            // M - S
-            // - A -
-            // M - S
-            return true
+        })
+    }
+
+    var isLooping: Bool {
+        rows.contains { row in
+            row.contains { $0.isLooping }
         }
-        if (topLeft.value == "M"
-            && topRight.value == "S"
-            && downLeft.value == "M"
-            && downRight.value == "S") {
-            // M - M
-            // - A -
-            // S - S
-            return true
-        }
-        if (topLeft.value == "S"
-            && topRight.value == "S"
-            && downLeft.value == "M"
-            && downRight.value == "M") {
-            // S - M
-            // - A -
-            // S - M
-            return true
-        }
-        if (topLeft.value == "S"
-            && topRight.value == "M"
-            && downLeft.value == "S"
-            && downRight.value == "M") {
-            // S - M
-            // - A -
-            // S - M
-            return true
-        }
-        return false
     }
 }
 
 private func processSecondpart(_ map: Map) -> Int {
-    var result = 0
+    print(process(map))
     (0...(map.maxY)).forEach { y in
         (0...(map.maxX)).forEach { x in
-            let isCross = map.isXCrossesMas(at: (x, y))
-            result += isCross ? 1 : 0
-            if isCross {
-//                print("cross at :\(x), \(y)")
+            map[x, y]?.value = map[x, y]?.originalValue ?? ""
+        }
+    }
+    let initialPosition = findStart(map)
+    var result = 0
+    (0...(map.maxY)).forEach { y in
+        print(y)
+        (0...(map.maxX)).forEach { x in
+//            print(map[x, y]?.value)
+
+            if map[x, y]?.value == "." && map[x, y]?.isVisited ?? false {
+//                print("testing \(x), \(y)")
+                let mapCopy = map.copy
+                mapCopy[x, y]?.value = "#"
+                var position: (Int, Int)? = initialPosition
+//                print(position)
+                while position != nil {
+                    position = mapCopy.processSecondPart(at: position)
+                }
+                if mapCopy.isLooping {
+//                    print("found looping in \(x), \(y)")
+                    result += 1
+                }
             }
         }
     }
