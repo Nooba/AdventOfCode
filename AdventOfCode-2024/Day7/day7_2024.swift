@@ -16,7 +16,6 @@ private class Test {
         self.target = target
         self.numbers = numbers
         self.isValid = isValid
-        process()
     }
 
     func process() {
@@ -36,6 +35,8 @@ private class Test {
             copy.insert(newAfterAddition, at: 0)
             additionTest = test(target: target, numbers: copy)
         }
+        guard !additionTest else { return true }
+
         var multiplicationTest = false
         let newAfterMultiplication = numbers[0] * numbers[1]
         if newAfterMultiplication <= target {
@@ -43,7 +44,7 @@ private class Test {
             copy.insert(newAfterMultiplication, at: 0)
             multiplicationTest = test(target: target, numbers: Array(copy))
         }
-        return additionTest || multiplicationTest
+        return multiplicationTest
     }
 }
 
@@ -57,13 +58,57 @@ private func parseLine(_ line: String) -> Test {
 func day7_2024_A() throws -> Int {
     let lines = try FileReader(filename: "day7_2024_input").getLines()
     let tests = lines.map { parseLine($0) }
+    tests.forEach { $0.process() }
     return tests.filter { $0.isValid }.map { $0.target }.reduce(0, +)
 }
 
 // MARK: - Part B
 
+extension Test {
+    func processSecondPart() {
+        isValid = testSecondPart(target: target, numbers: numbers)
+    }
+
+    // MARK: - Private
+
+    private func testSecondPart(target: Int, numbers: [Int]) -> Bool {
+        guard numbers.count >= 2 else {
+            return numbers[0] == target
+        }
+        let newAfterAddition = numbers[0] + numbers[1]
+        var additionTest = false
+        if newAfterAddition <= target {
+            var copy = Array(numbers.dropFirst(2))
+            copy.insert(newAfterAddition, at: 0)
+            additionTest = testSecondPart(target: target, numbers: copy)
+        }
+        guard !additionTest else { return true }
+
+        var multiplicationTest = false
+        let newAfterMultiplication = numbers[0] * numbers[1]
+        if newAfterMultiplication <= target {
+            var copy = Array(numbers.dropFirst(2))
+            copy.insert(newAfterMultiplication, at: 0)
+            multiplicationTest = testSecondPart(target: target, numbers: Array(copy))
+        }
+        guard !multiplicationTest else { return true }
+
+        var concatenationTest = false
+        let newAfterConcatenation = Int("\(numbers[0])\(numbers[1])")!
+        if newAfterConcatenation <= target {
+            var copy = Array(numbers.dropFirst(2))
+            copy.insert(newAfterConcatenation, at: 0)
+            concatenationTest = testSecondPart(target: target, numbers: Array(copy))
+        }
+
+        return concatenationTest
+    }
+}
+
 func day7_2024_B() throws -> Int {
     let lines = try FileReader(filename: "day7_2024_input").getLines()
     let tests = lines.map { parseLine($0) }
-    return -1
+    tests.forEach { $0.processSecondPart() }
+//    print(tests.filter { $0.isValid }.map { $0.target })
+    return tests.filter { $0.isValid }.map { $0.target }.reduce(0, +)
 }
