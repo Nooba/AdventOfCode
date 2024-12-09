@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Algorithms
 
 private class Cell {
     let value: String
@@ -105,8 +106,47 @@ func day8_2024_A() throws -> Int {
 
 // MARK: - Part B
 
+private extension Map {
+    func processAntinodesSecondPart() {
+        antennas.forEach { (key, antennaPositions) in
+            for pair in antennaPositions.combinations(ofCount: 2) {
+                let (left, right) = (pair[0], pair[1])
+                let vector = ((left.x - right.x), (left.y - right.y))
+                var mult = 1
+                var positionToCheck = Position(x: left.x + mult * vector.0, y: left.y + mult * vector.1)
+                var cellToCheck = self[positionToCheck]
+                while cellToCheck != nil {
+                    cellToCheck!.antinodeOf.append(key)
+                    mult += 1
+                    positionToCheck = Position(x: left.x + mult * vector.0, y: left.y + mult * vector.1)
+                    cellToCheck = self[positionToCheck]
+                }
+
+                mult = -1
+                positionToCheck = Position(x: right.x + mult * vector.0, y: right.y + mult * vector.1)
+                cellToCheck = self[positionToCheck]
+                while cellToCheck != nil {
+                    if cellToCheck!.antinodeOf.isEmpty {
+                        cellToCheck!.antinodeOf.append(key)
+                    }
+                    mult -= 1
+                    positionToCheck = Position(x: right.x + mult * vector.0, y: right.y + mult * vector.1)
+                    cellToCheck = self[positionToCheck]
+                }
+            }
+        }
+    }
+
+    var totalAntinodesSecondPart: Int {
+        return rows.compactMap { row in
+            row.filter { !$0.antinodeOf.isEmpty || $0.value != "." }.count
+        }.reduce(0, +)
+    }
+}
+
 func day8_2024_B() throws -> Int {
     let lines = try FileReader(filename: "day8_2024_input").getLines()
     let map = parseLines(lines)
-    return -1
+    map.processAntinodesSecondPart()
+    return map.totalAntinodesSecondPart
 }

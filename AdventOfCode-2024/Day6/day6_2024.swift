@@ -160,7 +160,7 @@ func day6_2024_A() throws -> Int {
 
 // MARK: - Part B
 
-extension Map {
+private extension Map {
     func processSecondPart(at position: (Int, Int)?) -> (Int, Int)? {
         guard let position else {
             return nil
