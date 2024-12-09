@@ -67,10 +67,8 @@ private var memory = [Block]()
 func day9_2024_A() throws -> Int {
     let lines = try FileReader(filename: "day9_2024_input").getLines()
     memory = parseLine(lines[0])
-//    print(memory)
     var tuple: (Int, Int)? = (0, memory.count - 1)
     while tuple != nil {
-//        print(memory)
         tuple = process(tuple!.0, tuple!.1)
     }
     return memory.enumerated().reduce(0) { partialResult, iterator in
@@ -82,9 +80,85 @@ func day9_2024_A() throws -> Int {
 
 // MARK: - Part B
 
+private var moved = Set<Int>()
+
+private func processSecondPart(_ fileStart: Int, _ fileEnd: Int) throws -> Int? {
+    guard let fileId = memory[fileStart].fileId else { throw AoCError.wrongFormat }
+    if moved.contains(fileId) {
+        // Only move files once
+        return fileStart - 1
+    }
+    moved.insert(fileId)
+    let size = fileEnd - fileStart + 1
+    guard let leftStart = findEmptyBloc(of: size, before: fileStart) else {
+        // No found block for a swap
+        return fileStart - 1
+    }
+    try swapMemory(
+        leftStartIndex: leftStart,
+        leftEndIndex: leftStart + size - 1,
+        rightStartIndex: fileStart,
+        rightEndIndex: fileEnd
+    )
+    guard fileStart > 0 else {
+        return nil
+    }
+    return fileStart - 1
+}
+
+private func findEmptyBloc(of size: Int, before leftFileIndex: Int) -> Int? {
+    var start = 0
+    var result: Int?
+    while result == nil, start <= leftFileIndex {
+        if memory[start].isEmptyMemory {
+            if memory[start..<(start+size)].allSatisfy({ $0.isEmptyMemory }) {
+                result = start
+            } else {
+                start += 1
+            }
+        } else {
+            start += 1
+        }
+    }
+    return result
+}
+
+private func swapMemory(leftStartIndex: Int, leftEndIndex: Int, rightStartIndex: Int, rightEndIndex: Int) throws {
+    let size = leftEndIndex-leftStartIndex + 1
+    guard size == (rightEndIndex - rightStartIndex + 1) else { throw AoCError.wrongFormat }
+    let temp = memory[leftStartIndex...leftEndIndex]
+    (0..<size).forEach { index in
+        memory[leftStartIndex + index] = memory[rightStartIndex + index]
+        memory[rightStartIndex + index] = temp[leftStartIndex + index]
+    }
+}
+
 func day9_2024_B() throws -> Int {
     let lines = try FileReader(filename: "day9_2024_input").getLines()
-    let memory = parseLine(lines[0])
-    print(memory)
-    return -1
+    memory = parseLine(lines[0])
+    var nextFileEnd = memory.lastIndex { !$0.isEmptyMemory }
+    var nextFileStart = nextFileEnd
+    while nextFileEnd != nil {
+        // Ignore emptyMemory
+        while memory[nextFileEnd!].isEmptyMemory || moved.contains(memory[nextFileEnd!].fileId!)  {
+            guard nextFileEnd! > 0 else { break }
+            nextFileEnd! -= 1
+            nextFileStart = nextFileEnd
+        }
+        // We are on the end of the next file to process
+        guard nextFileEnd! > 0 else { break }
+        while memory[nextFileStart!].fileId == memory[nextFileEnd!].fileId {
+            // Find its start
+            nextFileStart! -= 1
+            guard nextFileStart! > 0 else { break }
+        }
+        nextFileEnd = try processSecondPart(nextFileStart! + 1, nextFileEnd!)
+        nextFileStart = nextFileEnd
+//        print(memory)
+    }
+    return memory.enumerated().reduce(0) { partialResult, iterator in
+        let (index, block) = iterator
+        guard !block.isEmptyMemory else { return partialResult }
+        return partialResult + index * block.fileId!
+    }
 }
