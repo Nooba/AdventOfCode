@@ -53,13 +53,16 @@ private struct Map {
         self[position.x, position.y]
     }
 
-    func computeTrailheadScore(at position: Position) -> Int {
+    func computeTrailheadScore(at position: Position, useSet: Bool = true) -> Int {
         guard let cell = self[position], cell.value == 0 else { return 0 }
 //        print("\ncell: \(cell.value) at \(position)")
         let walks = cell.directions.map { direction in
             walk(from: position, direction: direction)
         }.flatMap { $0 }
-        return Set(walks).count
+        if useSet {
+            return Set(walks).count
+        }
+        return walks.count
     }
 
     func walk(from position: Position, direction: Direction) -> [Position] {
@@ -156,5 +159,11 @@ func day10_2024_A() throws -> Int {
 func day10_2024_B() throws -> Int {
     let lines = try FileReader(filename: "day10_2024_input").getLines()
     let map = parseLines(lines)
-    return -1
+    var results = [Int]()
+    (0...(map.maxY)).forEach { y in
+        (0...(map.maxX)).forEach { x in
+            results.append(map.computeTrailheadScore(at: Position(x: x, y: y), useSet: false))
+        }
+    }
+    return results.reduce(0, +)
 }
