@@ -55,32 +55,50 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "62E65A4E-3C9E-4596-8EFC-57C17A70084E"
-            shouldBeEnabled = "Yes"
+            uuid = "FEA3764C-FD4A-420E-8B20-79423B293E66"
+            shouldBeEnabled = "No"
+            condition = "rightKey==7"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AdventOfCode-2024/Day11/day11_2024.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "parseLine(_:)"
+            startingLineNumber = "131"
+            endingLineNumber = "131"
+            landmarkName = "blinkBuckets()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "364D1EB5-A42D-4401-8C9C-2205EC802BA7"
+            uuid = "5A37837B-7821-4804-933A-784608075C25"
+            shouldBeEnabled = "No"
+            condition = "rightKey==7"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AdventOfCode-2024/Day11/day11_2024.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "blinkBuckets()"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "098F559B-481D-4368-94C9-E8D3834D724C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AdventOfCode-2024/Day11/day11_2024.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "blink(stone:)"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "day11_2024_B()"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
