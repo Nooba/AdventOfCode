@@ -18,10 +18,10 @@ private enum Direction: CaseIterable {
 private class Cell: CustomDebugStringConvertible {
     let value: String
     var plotNumber = 0
-    var topEdgeNumber = 0
-    var leftEdgeNumber = 0
-    var rightEdgeNumber = 0
-    var bottomEdgeNumber = 0
+    var topEdgeNumber = -1
+    var leftEdgeNumber = -1
+    var rightEdgeNumber = -1
+    var bottomEdgeNumber = -1
 
     init(value: String) {
         self.value = value
@@ -39,7 +39,6 @@ private struct Position: Hashable {
 
 private var sizes: [Int: Int] = [:]
 private var perimeters: [Int: Int] = [:]
-private var plotSides: [Int: Int] = [:]
 private var nextEdgeNumber: [Int: Int] = [:]
 
 private struct Map {
@@ -49,6 +48,7 @@ private struct Map {
         self.rows = rows
         computePlots()
         computePerimeters()
+        computeEdges()
     }
 
     var maxX: Int {
@@ -83,9 +83,6 @@ private struct Map {
     private func computePlots(at position: Position, assignPlotNumber plotNumber: Int) -> Int {
         guard let cell = self[position], cell.plotNumber == 0 else { return plotNumber }
 
-//        nextEdgeNumber[plotNumber]
-
-
         cell.plotNumber = plotNumber
         sizes[plotNumber] = (sizes[plotNumber] ?? 0) + 1
         Direction.allCases.forEach { direction in
@@ -96,6 +93,73 @@ private struct Map {
             }
         }
         return plotNumber + 1
+    }
+
+    private func updateEdgeNumber(at position: Position) {
+        guard let cell = self[position] else { return }
+        var nextEdge = nextEdgeNumber[cell.plotNumber] ?? 0
+        var leftCell: Cell?
+        if let left = cellLeft(position: position), left.plotNumber == cell.plotNumber {
+            leftCell = left
+        }
+        var rightCell: Cell?
+        if let right = cellRight(position: position), right.plotNumber == cell.plotNumber {
+            rightCell = right
+        }
+
+        var aboveCell: Cell?
+        if let above = cellAbove(position: position), above.plotNumber == cell.plotNumber {
+            aboveCell = above
+        }
+        var belowCell: Cell?
+        if let below = cellBelow(position: position), below.plotNumber == cell.plotNumber {
+            belowCell = below
+        }
+
+        if cell.topEdgeNumber == -1 && aboveCell == nil {
+            if leftCell != nil, leftCell?.topEdgeNumber != -1 {
+                cell.topEdgeNumber = leftCell!.topEdgeNumber
+            } else if rightCell != nil, rightCell?.topEdgeNumber != -1 {
+                cell.topEdgeNumber = rightCell!.topEdgeNumber
+            } else if aboveCell == nil || aboveCell?.plotNumber != cell.plotNumber {
+                cell.topEdgeNumber = nextEdge
+                nextEdge += 1
+                nextEdgeNumber[cell.plotNumber] = nextEdge
+            }
+        }
+        if cell.bottomEdgeNumber == -1 && belowCell == nil {
+            if leftCell != nil, leftCell?.bottomEdgeNumber != -1 {
+                cell.bottomEdgeNumber = leftCell!.bottomEdgeNumber
+            } else if rightCell != nil, rightCell?.bottomEdgeNumber != -1 {
+                cell.bottomEdgeNumber = rightCell!.bottomEdgeNumber
+            } else if belowCell == nil || belowCell?.plotNumber != cell.plotNumber {
+                cell.bottomEdgeNumber = nextEdge
+                nextEdge += 1
+                nextEdgeNumber[cell.plotNumber] = nextEdge
+            }
+        }
+        if cell.leftEdgeNumber == -1 && leftCell == nil {
+            if aboveCell != nil, aboveCell?.leftEdgeNumber != -1 {
+                cell.leftEdgeNumber = aboveCell!.leftEdgeNumber
+            } else if belowCell != nil, belowCell?.leftEdgeNumber != -1 {
+                cell.leftEdgeNumber = belowCell!.leftEdgeNumber
+            } else if leftCell == nil || leftCell?.plotNumber != cell.plotNumber  {
+                cell.leftEdgeNumber = nextEdge
+                nextEdge += 1
+                nextEdgeNumber[cell.plotNumber] = nextEdge
+            }
+        }
+        if cell.rightEdgeNumber == -1 && rightCell == nil {
+            if aboveCell != nil, aboveCell?.rightEdgeNumber != -1 {
+                cell.rightEdgeNumber = aboveCell!.rightEdgeNumber
+            } else if belowCell != nil, belowCell?.rightEdgeNumber != -1 {
+                cell.rightEdgeNumber = belowCell!.rightEdgeNumber
+            } else if rightCell == nil || rightCell?.plotNumber != cell.plotNumber {
+                cell.rightEdgeNumber = nextEdge
+                nextEdge += 1
+                nextEdgeNumber[cell.plotNumber] = nextEdge
+            }
+        }
     }
 
     private func cellAbove(position: Position) -> Cell? {
@@ -148,6 +212,14 @@ private struct Map {
         }
         perimeters[plotNumber] = (perimeters[plotNumber] ?? 0) + perimeter
     }
+
+    private func computeEdges() {
+        (0...(maxY)).forEach { y in
+            (0...(maxX)).forEach { x in
+                updateEdgeNumber(at: Position(x: x, y: y))
+            }
+        }
+    }
 }
 
 private func parseLines(_ lines: [String]) -> Map {
@@ -174,10 +246,10 @@ func day12_2024_A() throws -> Int {
 // MARK: - Part B
 
 func day12_2024_B() throws -> Int {
-    let lines = try FileReader(filename: "day12_2024_example").getLines()
+    let lines = try FileReader(filename: "day12_2024_input").getLines()
     _ = parseLines(lines)
     let costs = sizes.keys.map { key in
-        sizes[key]! * plotSides[key]!
+        sizes[key]! * nextEdgeNumber[key]!
     }
     return costs.reduce(0, +)
 }
