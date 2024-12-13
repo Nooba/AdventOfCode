@@ -20,6 +20,9 @@
 		060906322848C6070030C052 /* day3_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0609062E2848C1810030C052 /* day3_example.txt */; };
 		06090636284907720030C052 /* day4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06090635284907720030C052 /* day4.swift */; };
 		0609063A284907AA0030C052 /* day4_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 06090637284907950030C052 /* day4_example.txt */; };
+		061C60892D0C3D9D0078DCCC /* day13_2024_input.txt in Resources */ = {isa = PBXBuildFile; fileRef = 061C60862D0C3D9D0078DCCC /* day13_2024_input.txt */; };
+		061C608A2D0C3D9D0078DCCC /* day13_2024_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 061C60852D0C3D9D0078DCCC /* day13_2024_example.txt */; };
+		061C608B2D0C3DB90078DCCC /* day13_2024.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061C60842D0C3D9D0078DCCC /* day13_2024.swift */; };
 		0623D87C2850DD3D00ED604B /* day5.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0623D87B2850DD3D00ED604B /* day5.swift */; };
 		0623D87F2850DD6200ED604B /* day5_example.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0623D87E2850DD4E00ED604B /* day5_example.txt */; };
 		0623D8832851D26700ED604B /* day6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0623D8822851D26700ED604B /* day6.swift */; };
@@ -193,6 +196,9 @@
 		06090635284907720030C052 /* day4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = day4.swift; sourceTree = "<group>"; };
 		06090637284907950030C052 /* day4_example.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day4_example.txt; sourceTree = "<group>"; };
 		06090638284907A70030C052 /* day4_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day4_input.txt; sourceTree = "<group>"; };
+		061C60842D0C3D9D0078DCCC /* day13_2024.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = day13_2024.swift; sourceTree = "<group>"; };
+		061C60852D0C3D9D0078DCCC /* day13_2024_example.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day13_2024_example.txt; sourceTree = "<group>"; };
+		061C60862D0C3D9D0078DCCC /* day13_2024_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day13_2024_input.txt; sourceTree = "<group>"; };
 		0623D87B2850DD3D00ED604B /* day5.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = day5.swift; sourceTree = "<group>"; };
 		0623D87D2850DD4600ED604B /* day5_input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day5_input.txt; sourceTree = "<group>"; };
 		0623D87E2850DD4E00ED604B /* day5_example.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = day5_example.txt; sourceTree = "<group>"; };
@@ -494,6 +500,16 @@
 			path = Day4;
 			sourceTree = "<group>";
 		};
+		061C60872D0C3D9D0078DCCC /* Day13 */ = {
+			isa = PBXGroup;
+			children = (
+				061C60842D0C3D9D0078DCCC /* day13_2024.swift */,
+				061C60852D0C3D9D0078DCCC /* day13_2024_example.txt */,
+				061C60862D0C3D9D0078DCCC /* day13_2024_input.txt */,
+			);
+			path = Day13;
+			sourceTree = "<group>";
+		};
 		0623D87A2850DD3100ED604B /* Day5 */ = {
 			isa = PBXGroup;
 			children = (
@@ -717,6 +733,7 @@
 				06FD8EDB2D0884AA00F21CCA /* Day10 */,
 				06FD8EE32D09995100F21CCA /* Day11 */,
 				0650323F2D0AE6F300B7B640 /* Day12 */,
+				061C60872D0C3D9D0078DCCC /* Day13 */,
 			);
 			path = "AdventOfCode-2024";
 			sourceTree = "<group>";
@@ -1345,6 +1362,8 @@
 				065032412D0AE6F300B7B640 /* day12_2024_input.txt in Resources */,
 				06FD8ECD2D06F48600F21CCA /* day8_2024_input.txt in Resources */,
 				06D461782CFDB2A500FFEC7D /* day2_2024_input.txt in Resources */,
+				061C60892D0C3D9D0078DCCC /* day13_2024_input.txt in Resources */,
+				061C608A2D0C3D9D0078DCCC /* day13_2024_example.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1397,6 +1416,7 @@
 				0623D8912852285C00ED604B /* day8.swift in Sources */,
 				1AD07A942B4C19B8004ADF14 /* day8_2015.swift in Sources */,
 				0687AAF4285390E700BF0AAA /* Graph.swift in Sources */,
+				061C608B2D0C3DB90078DCCC /* day13_2024.swift in Sources */,
 				1AF79C4E2B1F45F0009422C6 /* day3_2023.swift in Sources */,
 				0627DF1B29408CD300B1A034 /* day7_2022.swift in Sources */,
 				06FD8EA92D00A74300F21CCA /* day4_2024.swift in Sources */,
