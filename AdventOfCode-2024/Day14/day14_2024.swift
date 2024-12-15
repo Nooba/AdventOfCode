@@ -140,42 +140,15 @@ func day14_2024_A() throws -> Int {
 // MARK: - Part B
 
 private func isEasterEgg(robots: [Robot], maxX: Int, maxY: Int) -> Bool {
-    var NE = 0
-    var SE = 0
-    var NW = 0
-    var SW = 0
 
-    let middleX = (maxX - 1) / 2
-    let middleY = (maxY - 1) / 2
-
-    robots.forEach { robot in
-
-        if robot.position.x < middleX && robot.position.y < middleY {
-            NW += 1
-        } else if robot.position.x < middleX && robot.position.y > middleY {
-            SW += 1
-        } else if robot.position.x > middleX && robot.position.y < middleY {
-            NE += 1
-        } else if robot.position.x > middleX && robot.position.y > middleY {
-            SE += 1
-        } else {
-//            print("in the middle")
-        }
-    }
-    guard NE == NW, SE == SW else { return false }
     let map = initializeMap(withRobots: robots)
     var keepComputing = true
-    (0..<(map.maxY)).forEach { y in
+    (0...(map.maxY)).forEach { y in
         guard keepComputing else { return }
-        (0...(map.maxX/2)).forEach { x in
+        (0...(map.maxX)).forEach { x in
             guard keepComputing else { return }
-            guard let leftCell = map[Position(x: x, y: y)],
-                  let rightCell = map[Position(x: map.maxX - x - 1, y: y)] else {
-                print("WTF")
-                keepComputing = false
-                return
-            }
-            guard leftCell.robots.count == rightCell.robots.count else {
+            guard let cell = map[Position(x: x, y: y)] else { return }
+            if cell.robots.count > 1 {
                 keepComputing = false
                 return
             }
@@ -199,5 +172,6 @@ func day14_2024_B() throws -> Int {
         }
         i += 1
     }
+    // 6378 too high
     return i
 }
