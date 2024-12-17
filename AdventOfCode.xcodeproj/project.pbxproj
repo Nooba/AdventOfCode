@@ -735,14 +735,14 @@
 			path = Day15;
 			sourceTree = "<group>";
 		};
-		06415DF92D104FEC00A67532 /* Day16 2 */ = {
+		06415DF92D104FEC00A67532 /* Day16 */ = {
 			isa = PBXGroup;
 			children = (
 				06415DF62D104FEC00A67532 /* day16_2024.swift */,
 				06415DF72D104FEC00A67532 /* day16_2024_example.txt */,
 				06415DF82D104FEC00A67532 /* day16_2024_input.txt */,
 			);
-			path = "Day16 2";
+			path = Day16;
 			sourceTree = "<group>";
 		};
 		0650323F2D0AE6F300B7B640 /* Day12 */ = {
@@ -784,7 +784,7 @@
 				061C60872D0C3D9D0078DCCC /* Day13 */,
 				06415DE92D0EC63000A67532 /* Day14 */,
 				06415DF12D0ED0E400A67532 /* Day15 */,
-				06415DF92D104FEC00A67532 /* Day16 2 */,
+				06415DF92D104FEC00A67532 /* Day16 */,
 			);
 			path = "AdventOfCode-2024";
 			sourceTree = "<group>";
