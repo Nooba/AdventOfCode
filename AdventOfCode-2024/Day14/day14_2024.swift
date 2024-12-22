@@ -30,15 +30,26 @@ private class Robot: CustomStringConvertible {
     }
 }
 
-private class Cell {
+private class Cell: CustomStringConvertible {
     var robots: [Robot]
 
     init(robots: [Robot]) {
         self.robots = robots
     }
+
+    var description: String {
+        switch robots.count {
+        case 0:
+            return "."
+        case 1:
+            return "1"
+        default:
+            return "*"
+        }
+    }
 }
 
-private struct Map {
+private struct Map: CustomStringConvertible {
     let rows: [[Cell]]
 
     init(rows: [[Cell]]) {
@@ -59,6 +70,12 @@ private struct Map {
 
     subscript(position: Position) -> Cell? {
         self[position.x, position.y]
+    }
+
+    var description: String {
+        return rows.map { row in
+            return row.map { $0.description }.joined()
+        }.joined(separator: "\n")
     }
 }
 
@@ -162,16 +179,27 @@ func day14_2024_B() throws -> Int {
     var robots = try lines.map { try parseLine($0) }
     let maxX = 101
     let maxY = 103
-//    let map = initializeMap(withRobots: robots)
-    var result: Int?
-    var i = 1
-    while result == nil {
-        robots = blink(robots: robots, maxX: maxX, maxY: maxY)
-        if isEasterEgg(robots: robots, maxX: maxX, maxY: maxY) {
-            result = i
-        }
-        i += 1
-    }
+//    var result: Int?
+//    var i = 1
+//    while i < 6379 {
+//        print("\n\n-------------------------------------------\(i)-------------------------------")
+//        robots = blink(robots: robots, maxX: maxX, maxY: maxY)
+//        let map = initializeMap(withRobots: robots)
+//        if i > 6376 {
+//            print(map)
+//        }
+////        if isEasterEgg(robots: robots, maxX: maxX, maxY: maxY) {
+////            result = i
+////        }
+//        i += 1
+//    }
     // 6378 too high
-    return i
+    // 4054 too low
+    var setA = Set<Int>()
+    var setB = Set<Int>()
+    (0..<100).forEach { i in
+        setA.insert(14 + 101 * i) // vertical suspicious pattern
+        setB.insert(94 + 103 * i) // horizontal suspicious pattern
+    }
+    return setA.intersection(setB).first ?? -1
 }
