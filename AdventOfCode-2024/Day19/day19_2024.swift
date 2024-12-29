@@ -26,6 +26,8 @@ private class Solver: CustomStringConvertible {
     let target: Pattern
     var testing: [Pattern]
     var tested: [Pattern: [Pattern]]
+    var testedSecondPart: [[Pattern]: [Pattern]] = [:]
+    var solutions = Set<[Pattern]>()
 
     init(target: Pattern, testing: [Pattern], tested: [Pattern : [Pattern]]) {
         self.target = target
@@ -106,7 +108,6 @@ private extension Solver {
         testing.flatMap { $0 }
     }
 
-
     private var nextPart: Pattern {
         Array(target[testing.flatMap { $0 }.count..<target.count])
     }
@@ -147,7 +148,6 @@ func day19_2024_A() throws -> Int {
     parsePatterns(lines[0].first!)
     let solvers = lines[1].map { parseDesigns($0) }
 //    print(availablePatterns)
-    let maximumDesignLength = solvers.map { $0.target.count }.max()!
 //    generateAllPossiblePatterns(from: [], maxLength: maximumDesignLength)
 //    return designs.filter { design in
 //        possiblePatterns.contains(design)
@@ -161,9 +161,58 @@ func day19_2024_A() throws -> Int {
     // 269 *
 }
 
+private extension Solver {
+
+    func reinit() {
+        tested = [:]
+        testing = []
+    }
+
+    func solveSecondPart(from availablePatterns: Set<Pattern>) -> Int {
+        reinit()
+        while (tested[[]] ?? []).count < availablePatterns.count {
+//            print(self)
+            let newMaxLength = nextPart.count
+            let validPatterns = availablePatterns.filter { pattern in
+                guard pattern.count <= newMaxLength else { return false }
+                let alreadyTried = testedSecondPart[testing]?.first(where: { $0 == pattern })
+                guard alreadyTried == nil else { return false }
+                return Array(nextPart[0..<pattern.count]) == pattern
+            }.sorted { left, right in
+                left.count > right.count
+            }
+            if validPatterns.isEmpty {
+                if testing.isEmpty {
+                    break
+                }
+                _ = testing.popLast()
+            } else {
+                let next = validPatterns.first!
+                var array = testedSecondPart[testing] ?? []
+                array.append(next)
+                testedSecondPart[testing] = array
+                testing.append(next)
+                if status == .solved {
+                    solutions.insert(testing)
+                }
+            }
+        }
+        return solutions.count
+    }
+}
+
 // MARK: - Part B
 
 func day19_2024_B() throws -> Int {
-    let lines = try FileReader(filename: "day19_2024_example").getLines()
-    return -1
+    let lines = try FileReader(filename: "day19_2024_input").getGroupedLines()
+    parsePatterns(lines[0].first!)
+    let solvers = lines[1].map { parseDesigns($0) }
+    let mapped = solvers.filter { solve in
+        return solve.solve(from: availablePatterns)
+    }.enumerated().map { (index, solve) in
+        print(index)
+        return solve.solveSecondPart(from: availablePatterns)
+    }
+    print(mapped)
+    return mapped.reduce(0, +)
 }

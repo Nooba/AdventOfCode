@@ -849,8 +849,8 @@
             filePath = "AdventOfCode-2024/Day19/day19_2024.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "isDesign(_:validFrom:)"
             landmarkType = "9">
          </BreakpointContent>
@@ -858,64 +858,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F3BB68DC-CF46-4450-9148-7DFF4A6C49E1"
+            uuid = "3960A446-AA2D-4903-8105-6D0E9EA277D8"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AdventOfCode-2024/Day19/day19_2024.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
-            landmarkName = "solve(from:)"
+            startingLineNumber = "196"
+            endingLineNumber = "196"
+            landmarkName = "solveSecondPart(from:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B48C13B7-8AA5-4C6C-A0A8-36D24A8F2376"
+            uuid = "E9723A70-6299-49FA-AD05-0585435EFF79"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AdventOfCode-2024/Day19/day19_2024.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "solve(from:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "386FE67E-522A-43A5-B6B3-B909D100B00F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "AdventOfCode-2024/Day19/day19_2024.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "120"
-            endingLineNumber = "120"
-            landmarkName = "solve(from:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5CA8F5AD-C2F7-4A95-9F9F-13ADE8193363"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "AdventOfCode-2024/Day19/day19_2024.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
-            landmarkName = "solve(from:)"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "solveSecondPart(from:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
