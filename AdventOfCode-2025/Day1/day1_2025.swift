@@ -47,12 +47,38 @@ func day1_2025_A() throws -> Int {
 func day1_2025_B() throws -> Int {
     let lines = try FileReader(filename: "day1_2025_input").getLines()
     let instructions = try lines.map(parseLine(_:))
-//    let lefts = numbers.map { $0.0 }.sorted()
-//    let rights = numbers.map { $0.1 }.sorted()
-//    guard lefts.count == rights.count else { throw AoCError.wrongFormat }
-//    let similarityScore = lefts.map { left in
-//        return left * rights.filter { left == $0 }.count
-//    }
-//    return similarityScore.reduce(0, +)
-    return -1
+    var value = 50
+    var result = 0
+    instructions.forEach { instruction in
+//        dump(instruction)
+        let previous = value
+        let minimumSteps = instruction.steps % 100
+        result += instruction.steps / 100
+        guard minimumSteps > 0 else {
+            return
+        }
+        switch instruction.direction {
+        case .left:
+            value -= minimumSteps
+        case .right:
+            value += minimumSteps
+        }
+//        dump(value)
+        defer {
+            if value < 0 {
+                value += 100
+            }
+            value = value % 100
+//            dump(result)
+//            dump("-----")
+        }
+        if previous == 0 {
+            return
+        }
+        if value >= 100 || value <= 0 {
+            result += 1
+            return
+        }
+    }
+    return result
 }
