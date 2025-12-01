@@ -7,35 +7,52 @@
 
 import Foundation
 
-private func parseLine(_ line: String) throws -> (Int, Int) {
-    let ints = (line.components(separatedBy: .whitespacesAndNewlines)).compactMap { Int($0) }
-    guard ints.count == 2 else {
-        throw AoCError.wrongFormat
-    }
-    return (ints[0], ints[1])
+private enum Direction: String {
+    case left = "L"
+    case right = "R"
 }
+
+private struct Instruction {
+    let direction: Direction
+    let steps: Int
+}
+
+private func parseLine(_ line: String) throws -> Instruction {
+    let direction = Direction(rawValue: String(line.first!))!
+    let steps = Int(line[line.index(after: line.startIndex)..<line.endIndex])!
+    return Instruction(direction: direction, steps: steps)
+}
+
 
 func day1_2025_A() throws -> Int {
     let lines = try FileReader(filename: "day1_2025_input").getLines()
-    let numbers = try lines.map(parseLine(_:))
-    let lefts = numbers.map { $0.0 }.sorted()
-    let rights = numbers.map { $0.1 }.sorted()
-    guard lefts.count == rights.count else { throw AoCError.wrongFormat }
+    let instructions = try lines.map(parseLine(_:))
+    var value = 50
     var result = 0
-    for (left, right) in zip(lefts, rights) {
-        result += abs(left - right)
+    instructions.forEach { instruction in
+        switch instruction.direction {
+        case .left:
+            value -= instruction.steps
+        case .right:
+            value += instruction.steps
+        }
+        value = value % 100
+        if value == 0 {
+            result += 1
+        }
     }
     return result
 }
 
 func day1_2025_B() throws -> Int {
     let lines = try FileReader(filename: "day1_2025_input").getLines()
-    let numbers = try lines.map(parseLine(_:))
-    let lefts = numbers.map { $0.0 }.sorted()
-    let rights = numbers.map { $0.1 }.sorted()
-    guard lefts.count == rights.count else { throw AoCError.wrongFormat }
-    let similarityScore = lefts.map { left in
-        return left * rights.filter { left == $0 }.count
-    }
-    return similarityScore.reduce(0, +)
+    let instructions = try lines.map(parseLine(_:))
+//    let lefts = numbers.map { $0.0 }.sorted()
+//    let rights = numbers.map { $0.1 }.sorted()
+//    guard lefts.count == rights.count else { throw AoCError.wrongFormat }
+//    let similarityScore = lefts.map { left in
+//        return left * rights.filter { left == $0 }.count
+//    }
+//    return similarityScore.reduce(0, +)
+    return -1
 }
