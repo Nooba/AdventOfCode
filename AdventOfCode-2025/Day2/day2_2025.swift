@@ -8,7 +8,7 @@
 import Foundation
 
 private extension Int {
-    var isValid: Bool {
+    var isInvalid: Bool {
         let string = String(self)
         guard string.count.isMultiple(of: 2) else {
             return false
@@ -38,7 +38,7 @@ private struct Tuple {
     }
 
     var invalidIds: [Int] {
-        Array(start...end).filter(\.isValid)
+        Array(start...end).filter(\.isInvalid)
     }
 }
 
@@ -50,55 +50,45 @@ func day2_2025_A() throws -> Int {
 
 // MARK: - Part B
 
-func day2_2025_B() throws -> Int {
-    let lines = try FileReader(filename: "day2_2025_input").getLines()
-    let reports = try lines.map(parseLine(_:))
-    let unsafe = reports.filter { !isSafe(levels: $0) }
-    let superUnsafe = unsafe.filter { unsafeReport in
-        let length = unsafeReport.count
-        var dampenedReports: [[Int]] = []
-        for i in (0..<length) {
-            var copy = unsafeReport
-            copy.remove(at: i)
-            dampenedReports.append(copy)
+private extension Int {
+    var isInvalidPartB: Bool {
+        let string = String(self)
+        let startIndex = string.startIndex
+        var isValid = true
+        guard string.count > 1 else { return false }
+        for i in 1...string.count / 2 {
+            guard isValid else { continue }
+            let length = i
+            guard string.count.isMultiple(of: i) else { continue }
+            let pattern = string[startIndex..<string.index(startIndex, offsetBy: length)]
+            let amount = string.count / length
+            var keepTestingI = true
+            for j in 1..<amount {
+                guard keepTestingI else { continue }
+                let nextStart = string.index(startIndex, offsetBy: j * length)
+                let end = string.index(nextStart, offsetBy: length)
+                let nextPattern = string[nextStart..<end]
+                if nextPattern != pattern {
+                    keepTestingI = false
+                }
+            }
+            if keepTestingI {
+                isValid = false
+            }
         }
-        return !dampenedReports.contains { isSafe(levels: $0) }
+        return !isValid
     }
-    return reports.count - superUnsafe.count
 }
 
-private func isSafe(levels: [Int]) -> Bool {
-    var positiveSlope: Bool?
-    var previous: Int!
-    var isSafe = true
-    print(levels)
-    levels.enumerated().forEach { (index, element) in
-        if !isSafe { return }
-        if index == 0 {
-            previous = element
-            return
-        }
-        print(element)
-        if index == 1 {
-            positiveSlope = element >= previous
-        }
-        let abs = abs(element - previous)
-        if abs > 3 {
-            print("distance")
-            isSafe = false
-            return
-        }
-        if abs == 0 {
-            print("flat slope")
-            isSafe = false
-            return
-        }
-        if (element >= previous) != positiveSlope {
-            print("slope change")
-            isSafe = false
-            return
-        }
-        previous = element
+private extension Tuple {
+    var invalidIdsPartB: [Int] {
+        Array(start...end).filter { $0.isInvalidPartB }
     }
-    return isSafe
+}
+
+func day2_2025_B() throws -> Int {
+    let line = try FileReader(filename: "day2_2025_input").getLines()[0]
+    let tuples = line.components(separatedBy: ",").map { Tuple(string: $0) }
+    let invalids = tuples.flatMap { $0.invalidIdsPartB }
+    return invalids.reduce(0, +)
 }

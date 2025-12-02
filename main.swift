@@ -8,7 +8,7 @@
 import Foundation
 
 let start = Date()
-let result = try day2_2025_A()
+let result = try day2_2025_B()
 let finish = Date()
 let durationString = String(format: "%.3f", start.distance(to: finish))
 print("Result: \(result), computed in \(durationString) seconds")
