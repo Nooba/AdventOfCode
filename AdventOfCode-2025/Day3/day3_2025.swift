@@ -32,32 +32,36 @@ func day3_2025_A() throws -> Int {
 
 // MARK: - Part B
 
-fileprivate var enabled = true
-
-private func parseLinePartB(_ line: String) throws -> Int {
-    var result = 0
-    try parseRegexp(line, capturePattern: #"mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)"#, getAllMatches: true) { groups in
-        let mapped = groups.compactMap { group -> String? in
-            if group == "do()" {
-                enabled = true
-                return nil
-            } else if group == "don't()" {
-                enabled = false
-                return nil
-            } else if enabled {
-                return group.replacingOccurrences(of: "mul(", with: "").replacingOccurrences(of: ")", with: "")
-            }
-            return nil
-        }
-        let components = mapped.map { $0.components(separatedBy: ",") }
-        let values = components.map { $0.map { Int($0)! }.reduce(1, *) }
-        result += values.reduce(0, +)
-    }
-    return result
-}
-
-
 func day3_2025_B() throws -> Int {
     let lines = try FileReader(filename: "day3_2025_input").getLines()
-    return try lines.map { try parseLinePartB($0) }.reduce(0, +)
+    let count = 12
+    let results = lines.map { line in
+        let subEndIndex = line.index(line.startIndex, offsetBy: count)
+        var joltage = String(
+            line[line.startIndex..<line.index(line.startIndex, offsetBy: count)]
+        ).map { Int(String($0))! }
+        let subLine = String(line[subEndIndex..<line.endIndex])
+        subLine.forEach { char in
+            let current = Int(String(char))!
+            var keepChecking = true
+            // Find j from end such that joltage[k] < joltage[k+1]
+            // slide everything from k to end + add current at end
+            for j in (1..<count) {
+                guard keepChecking else { continue }
+                if joltage[j - 1] < joltage[j] {
+                    for k in (j-1..<count-1) {
+                        joltage[k] = joltage[k+1]
+                    }
+                    joltage[count-1] = current
+                    keepChecking = false
+                }
+            }
+            if keepChecking && joltage[count-1] < current {
+                joltage[count-1] = current
+            }
+        }
+        return Int(joltage.map { "\($0)" }.joined())!
+    }
+    print(results)
+    return results.reduce(0, +)
 }
