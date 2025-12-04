@@ -7,16 +7,29 @@
 
 import Foundation
 
-private class Cell {
-    let value: String
+private enum Value: String {
+    case empty = "."
+    case roll = "@"
+}
+
+private class Cell: CustomDebugStringConvertible {
+    var value: Value
 
     init(value: String) {
-        self.value = value
+        self.value = Value(rawValue: value)!
+    }
+
+    var debugDescription: String {
+        return "\(value.rawValue)"
     }
 }
 
-private struct Map {
+private class Map {
     let rows: [[Cell]]
+
+    init(rows: [[Cell]]) {
+        self.rows = rows
+    }
 
     var maxX: Int {
         rows.map { $0.count }.max() ?? 0
@@ -30,26 +43,34 @@ private struct Map {
         return rows[safe: y]?[safe: x].map { $0 }
     }
 
-    func numberOfFoundXmas(at position: (Int, Int)) -> Int {
-        let search = "XMAS"
+    subscript(tuple: (x: Int, y: Int)) -> Cell? {
+        self[tuple.x, tuple.y]
+    }
+
+    func countAccessibleCells() -> Int {
         var count = 0
-        Direction.allCases.forEach { direction in
-            let countAtPos = find(search: search, startingAt: position, direction: direction) ? 1 : 0
-            count += countAtPos
-            if countAtPos > 0 {
-//                print("Added at pos: \(position), for direction: \(direction)")
+        for i in 0...maxX {
+            for j in 0...maxY {
+                count += isCellAccessible(i, j) ? 1 : 0
             }
         }
         return count
     }
 
-    func find(search: String, startingAt position: (Int, Int), direction: Direction) -> Bool {
-        let (x,y) = position
-        guard let cell = self[x, y] else { return false }
-        guard cell.value == String(search.first!) else { return false }
-        let substring = String(search.dropFirst())
-        guard !substring.isEmpty else { return true }
-        return find(search: substring, startingAt: newPosition(from: position, direction: direction), direction: direction)
+    func isCellAccessible(_ x: Int, _ y: Int) -> Bool {
+        guard let cell = self[x, y],
+              cell.value == .roll else {
+            return false
+        }
+        var count = 0
+        Direction.allCases.forEach {
+            guard count <= 4 else { return }
+            if let nextCell = self[newPosition(from: (x, y), direction: $0)],
+               nextCell.value == .roll {
+                count += 1
+            }
+        }
+        return count <= 3
     }
 
     private func newPosition(from position: (Int, Int), direction: Direction) -> (Int, Int) {
@@ -95,94 +116,44 @@ private func parseLines(_ lines: [String]) -> Map {
     return Map(rows: rows)
 }
 
-private func process(_ map: Map) -> Int {
-    var result = 0
-    (0...(map.maxY)).forEach { y in
-        (0...(map.maxX)).forEach { x in
-            result += map.numberOfFoundXmas(at: (x, y))
-        }
-    }
-    return result
-}
-
 func day4_2025_A() throws -> Int {
     let lines = try FileReader(filename: "day4_2025_input").getLines()
     let map = parseLines(lines)
-    return process(map)
+    return map.countAccessibleCells()
 }
 
 // MARK: - Part B
 
 extension Map {
-    func isXCrossesMas(at position: (Int, Int)) -> Bool {
-        let (x,y) = position
-        guard let cell = self[x, y] else { return false }
-        guard cell.value == "A" else { return false }
-        guard
-            let topLeft = self[x - 1, y - 1],
-            let topRight = self[x + 1, y - 1],
-            let downLeft = self[x - 1, y + 1],
-            let downRight = self[x + 1, y + 1],
-            [topLeft, topRight, downLeft, downRight].allSatisfy ({ $0.value == "M" || $0.value == "S" }) else {
-                return false
-            }
-        if (topLeft.value == "M"
-            && topRight.value == "M"
-            && downLeft.value == "S"
-            && downRight.value == "S") {
-            // M - S
-            // - A -
-            // M - S
-            return true
+    func iterateRemoval() -> Int {
+        let mapping = mapAccessibleCells()
+        mapping.forEach { tuple in
+            self[tuple]?.value = .empty
         }
-        if (topLeft.value == "M"
-            && topRight.value == "S"
-            && downLeft.value == "M"
-            && downRight.value == "S") {
-            // M - M
-            // - A -
-            // S - S
-            return true
-        }
-        if (topLeft.value == "S"
-            && topRight.value == "S"
-            && downLeft.value == "M"
-            && downRight.value == "M") {
-            // S - M
-            // - A -
-            // S - M
-            return true
-        }
-        if (topLeft.value == "S"
-            && topRight.value == "M"
-            && downLeft.value == "S"
-            && downRight.value == "M") {
-            // S - M
-            // - A -
-            // S - M
-            return true
-        }
-        return false
+        return mapping.count
     }
-}
 
-private func processSecondpart(_ map: Map) -> Int {
-    var result = 0
-    (0...(map.maxY)).forEach { y in
-        (0...(map.maxX)).forEach { x in
-            let isCross = map.isXCrossesMas(at: (x, y))
-            result += isCross ? 1 : 0
-            if isCross {
-//                print("cross at :\(x), \(y)")
+    private func mapAccessibleCells() -> [(Int, Int)] {
+        var array = [(Int, Int)]()
+        for i in 0...maxX {
+            for j in 0...maxY {
+                guard isCellAccessible(i, j) else { continue }
+                array.append((i, j))
             }
         }
+        return array
     }
-    return result
-}
 
+}
 
 func day4_2025_B() throws -> Int {
     let lines = try FileReader(filename: "day4_2025_input").getLines()
     let map = parseLines(lines)
-    return processSecondpart(map)
+    var count = 0
+    var next = map.iterateRemoval()
+    while next != 0 {
+        count += next
+        next = map.iterateRemoval()
+    }
+    return count
 }
