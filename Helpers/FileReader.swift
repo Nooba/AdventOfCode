@@ -27,8 +27,10 @@ struct FileReader {
         fileContent = text
     }
 
-    func getLines(filterEmptyLines: Bool = true) -> [String] {
-        let content = fileContent.components(separatedBy: CharacterSet.newlines).map { $0.trimmingCharacters(in: .whitespaces) }
+    func getLines(filterEmptyLines: Bool = true, trim: Bool = true) -> [String] {
+        let content = fileContent
+            .components(separatedBy: CharacterSet.newlines)
+            .map { trim ? $0.trimmingCharacters(in: .whitespaces) : $0 }
         guard filterEmptyLines else {
             return content
         }
