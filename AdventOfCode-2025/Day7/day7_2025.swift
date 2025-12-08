@@ -7,108 +7,197 @@
 
 import Foundation
 
-private class Test {
-    let target: Int
-    let numbers: [Int]
-    var isValid: Bool
+private enum Value: String {
+    case start = "S"
+    case empty = "."
+    case splitter = "^"
+    case beam = "|"
+}
 
-    init(target: Int, numbers: [Int], isValid: Bool) {
-        self.target = target
-        self.numbers = numbers
-        self.isValid = isValid
+private class Cell: CustomDebugStringConvertible {
+    var value: Value
+    var count: Int = 0
+
+    init(value: String) {
+        self.value = Value(rawValue: value)!
+        if self.value == .start {
+            count = 1
+        }
     }
 
-    func process() {
-        isValid = test(target: target, numbers: numbers)
-    }
-
-    // MARK: - Private
-
-    private func test(target: Int, numbers: [Int]) -> Bool {
-        guard numbers.count >= 2 else {
-            return numbers[0] == target
-        }
-        let newAfterAddition = numbers[0] + numbers[1]
-        var additionTest = false
-        if newAfterAddition <= target {
-            var copy = Array(numbers.dropFirst(2))
-            copy.insert(newAfterAddition, at: 0)
-            additionTest = test(target: target, numbers: copy)
-        }
-        guard !additionTest else { return true }
-
-        var multiplicationTest = false
-        let newAfterMultiplication = numbers[0] * numbers[1]
-        if newAfterMultiplication <= target {
-            var copy = Array(numbers.dropFirst(2))
-            copy.insert(newAfterMultiplication, at: 0)
-            multiplicationTest = test(target: target, numbers: Array(copy))
-        }
-        return multiplicationTest
+    var debugDescription: String {
+        return "\(value.rawValue)"
     }
 }
 
-private func parseLine(_ line: String) -> Test {
-    let components = line.components(separatedBy: ":")
-    let target = Int(components[0])!
-    let numbers = components[1].trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: " ").map { Int($0)! }
-    return Test(target: target, numbers: numbers, isValid: false)
+private class Map {
+    let rows: [[Cell]]
+
+    init(rows: [[Cell]]) {
+        self.rows = rows
+    }
+
+    var maxX: Int {
+        rows.map { $0.count }.max() ?? 0
+    }
+
+    var maxY: Int {
+        return rows.count
+    }
+
+    subscript(x: Int, y: Int) -> Cell? {
+        return rows[safe: y]?[safe: x].map { $0 }
+    }
+
+    subscript(tuple: (x: Int, y: Int)) -> Cell? {
+        self[tuple.x, tuple.y]
+    }
+
+    func newPosition(from position: (Int, Int), direction: Direction) -> (Int, Int) {
+        switch direction {
+        case .top:
+            return (position.0, position.1 - 1)
+        case .topLeft:
+            return (position.0 - 1, position.1 - 1)
+        case .left:
+            return (position.0 - 1, position.1)
+        case .downLeft:
+            return (position.0 - 1, position.1 + 1)
+        case .down:
+            return (position.0, position.1 + 1)
+        case .downRight:
+            return (position.0 + 1, position.1 + 1)
+        case .right:
+            return (position.0 + 1, position.1)
+        case .topRight:
+            return (position.0 + 1, position.1 - 1)
+        }
+    }
+}
+
+private enum Direction: CaseIterable {
+    case top
+    case topLeft
+    case left
+    case downLeft
+    case down
+    case downRight
+    case right
+    case topRight
+}
+
+private func parseLines(_ lines: [String]) -> Map {
+    let rows = lines.map { line in
+        line.map { cell in
+            let string = String(cell)
+            return Cell(value: string)
+        }
+    }
+    return Map(rows: rows)
 }
 
 func day7_2025_A() throws -> Int {
     let lines = try FileReader(filename: "day7_2025_input").getLines()
-    let tests = lines.map { parseLine($0) }
-    tests.forEach { $0.process() }
-    return tests.filter { $0.isValid }.map { $0.target }.reduce(0, +)
+    let map = parseLines(lines)
+    var splitCount = 0
+    for j in 0..<map.maxY {
+        for i in 0..<map.maxX {
+            let cell = map[i, j]!
+            let topCell = map[map.newPosition(from: (i, j), direction: .top)]
+            switch cell.value {
+            case .start:
+                break
+            case .splitter:
+                if let topCell, topCell.value == .start || topCell.value == .beam {
+                    var didSplit = false
+                    let leftCell = map[map.newPosition(from: (i, j), direction: .left)]
+                    if leftCell?.value == .empty {
+                        didSplit = true
+                        leftCell?.value = .beam
+                    }
+                    let rightCell = map[map.newPosition(from: (i, j), direction: .right)]
+                    if rightCell?.value == .empty {
+                        didSplit = true
+                        rightCell?.value = .beam
+                    }
+                    if didSplit {
+                        splitCount += 1
+                    }
+                }
+                break
+            case .empty:
+                if let topCell, topCell.value == .start || topCell.value == .beam {
+                    cell.value = .beam
+                }
+                break
+            case .beam:
+                break
+            }
+        }
+    }
+    return splitCount
 }
 
 // MARK: - Part B
 
-extension Test {
-    func processSecondPart() {
-        isValid = testSecondPart(target: target, numbers: numbers)
-    }
-
-    // MARK: - Private
-
-    private func testSecondPart(target: Int, numbers: [Int]) -> Bool {
-        guard numbers.count >= 2 else {
-            return numbers[0] == target
-        }
-        let newAfterAddition = numbers[0] + numbers[1]
-        var additionTest = false
-        if newAfterAddition <= target {
-            var copy = Array(numbers.dropFirst(2))
-            copy.insert(newAfterAddition, at: 0)
-            additionTest = testSecondPart(target: target, numbers: copy)
-        }
-        guard !additionTest else { return true }
-
-        var multiplicationTest = false
-        let newAfterMultiplication = numbers[0] * numbers[1]
-        if newAfterMultiplication <= target {
-            var copy = Array(numbers.dropFirst(2))
-            copy.insert(newAfterMultiplication, at: 0)
-            multiplicationTest = testSecondPart(target: target, numbers: Array(copy))
-        }
-        guard !multiplicationTest else { return true }
-
-        var concatenationTest = false
-        let newAfterConcatenation = Int("\(numbers[0])\(numbers[1])")!
-        if newAfterConcatenation <= target {
-            var copy = Array(numbers.dropFirst(2))
-            copy.insert(newAfterConcatenation, at: 0)
-            concatenationTest = testSecondPart(target: target, numbers: Array(copy))
-        }
-
-        return concatenationTest
-    }
-}
-
 func day7_2025_B() throws -> Int {
     let lines = try FileReader(filename: "day7_2025_input").getLines()
-    let tests = lines.map { parseLine($0) }
-    tests.forEach { $0.processSecondPart() }
-//    print(tests.filter { $0.isValid }.map { $0.target })
-    return tests.filter { $0.isValid }.map { $0.target }.reduce(0, +)
+    let map = parseLines(lines)
+    for j in 0..<map.maxY {
+        for i in 0..<map.maxX {
+            let cell = map[i, j]!
+            let topCell = map[map.newPosition(from: (i, j), direction: .top)]
+            switch cell.value {
+            case .start:
+                break
+            case .splitter:
+                if let topCell, topCell.value == .start || topCell.value == .beam {
+                    let leftCell = map[map.newPosition(from: (i, j), direction: .left)]
+                    if leftCell?.value == .empty || leftCell?.value == .beam {
+                        leftCell?.value = .beam
+                        leftCell?.count += topCell.count
+                    }
+                    let rightCell = map[map.newPosition(from: (i, j), direction: .right)]
+                    if rightCell?.value == .empty || rightCell?.value == .beam {
+                        rightCell?.value = .beam
+                        rightCell?.count += topCell.count
+                    }
+                }
+                break
+            case .empty:
+                if let topCell, topCell.value == .start || topCell.value == .beam {
+                    cell.value = .beam
+                    cell.count += topCell.count
+                }
+                break
+            case .beam:
+                if let topCell, topCell.value == .beam {
+                    cell.count += topCell.count
+                    break
+                }
+            }
+        }
+    }
+//    print(map.rows.last!.map { $0.count} )
+    return map.rows.last!.reduce(into: 0) { partialResult, cell in
+        partialResult += cell.count
+    }
 }
+
+//    .......S.......
+//    .......1........
+//    ......1^1......
+//    ...............
+//    .....1^2^1.....
+//    ...............
+//    ....1^3^3^1....
+//    ...............
+//    ...1^4^331^1...
+//    ...............
+//    ..1^5^434^2^1..
+//    ...............
+//    .1^154^74.21^1.
+//    ...............
+//    1^2^A^B^B^211^1
+//    ...............
+//
