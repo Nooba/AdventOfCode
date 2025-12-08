@@ -8,145 +8,98 @@
 import Foundation
 import Algorithms
 
-private class Cell {
-    let value: String
-    var antinodeOf: [String]
-
-    init(value: String, antinodeOf: [String]) {
-        self.value = value
-        self.antinodeOf = antinodeOf
-    }
-}
-
-private struct Position: Hashable {
+private struct JunctionBox: Hashable, CustomDebugStringConvertible {
     let x: Int
     let y: Int
-}
+    let z: Int
 
-private struct Map {
-    let rows: [[Cell]]
-    let antennas: [String: [Position]]
-
-    init(rows: [[Cell]], antennas: [String : [Position]]) {
-        self.rows = rows
-        self.antennas = antennas
+    init(string: String) {
+        let components = string.components(separatedBy: ",").map { Int($0) }
+        self.x = components[0]!
+        self.y = components[1]!
+        self.z = components[2]!
     }
 
-    var maxX: Int {
-        rows.map { $0.count }.max() ?? 0
+    func distance(to: JunctionBox) -> Int {
+        let deltaX = x - to.x
+        let deltaY = y - to.y
+        let deltaZ = z - to.z
+        return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ
     }
 
-    var maxY: Int {
-        return rows.count
-    }
-
-    subscript(x: Int, y: Int) -> Cell? {
-        return rows[safe: y]?[safe: x].map { $0 }
-    }
-
-    subscript(position: Position) -> Cell? {
-        self[position.x, position.y]
-    }
-
-    func processAntinodes(at position: Position?) {
-        guard let position, let cell = self[position] else { return }
-        antennas.forEach { (key, antennaPositions) in
-            guard cell.antinodeOf.isEmpty else { return }
-            let foundMatchingAntenna = antennaPositions.first { antennaPosition in
-                guard antennaPosition != position else { return false }
-                let vector = ((antennaPosition.x - position.x), (antennaPosition.y - position.y))
-                let positionToCheck = Position(x: antennaPosition.x + vector.0, y: antennaPosition.y + vector.1)
-                guard let cellToCheck = self[positionToCheck] else { return false }
-                return cellToCheck.value == key
-            }
-            if foundMatchingAntenna != nil {
-//                print(foundMatchingAntenna)
-                cell.antinodeOf.append(key)
-            }
-        }
-    }
-
-    var totalAntinodes: Int {
-        return rows.compactMap { row in
-            row.filter { !$0.antinodeOf.isEmpty }.count
-        }.reduce(0, +)
+    var debugDescription: String {
+        return "\(x),\(y),\(z)"
     }
 }
 
-private func parseLines(_ lines: [String]) -> Map {
-    var antennas = [String: [Position]]()
-    let rows = lines.enumerated().map { (indexRow, line) in
-        line.enumerated().map { (indexLine, cell) in
-            let string = String(cell)
-            if string != "." {
-                var array = antennas[string] ?? []
-                array.append(Position(x: indexLine, y: indexRow))
-                antennas[string] = array
-            }
-            return Cell(value: string, antinodeOf: [])
-        }
+private struct Tuple: Hashable, CustomDebugStringConvertible {
+    let left: JunctionBox
+    let right: JunctionBox
+
+    var debugDescription: String {
+        return "\(left.debugDescription)|\(right.debugDescription)|\(left.distance(to: right))"
     }
-    return Map(rows: rows, antennas: antennas)
+
 }
 
-private func process(_ map: Map) {
-    (0...(map.maxY)).forEach { y in
-        (0...(map.maxX)).forEach { x in
-            map.processAntinodes(at: Position(x: x, y: y))
-        }
-    }
-}
+private var distances = [Int: Tuple]()
 
 func day8_2025_A() throws -> Int {
+//    let iterations = 10 // example
+//    let lines = try FileReader(filename: "day8_2025_example").getLines()
+    let iterations = 1000 // input
     let lines = try FileReader(filename: "day8_2025_input").getLines()
-    let map = parseLines(lines)
-    process(map)
-    return map.totalAntinodes
+    let boxes = lines.map { JunctionBox(string: $0) }
+    for i in 0..<boxes.count {
+        for j in i+1..<boxes.count {
+            let left = boxes[i]
+            let right = boxes[j]
+            let tuple = Tuple(left: left, right: right)
+            let distance = left.distance(to: right)
+            // assume no distance equality
+            distances[distance] = tuple
+        }
+    }
+    let sortedDistances = distances.keys.sorted()
+    var circuits = [JunctionBox: Int]()
+    var nextId = 1
+    for i in 0..<iterations {
+        let nextDistance = sortedDistances[i]
+        let tuple = distances[nextDistance]!
+//        print(tuple)
+        let leftCircuit = circuits[tuple.left]
+        let rightCircuit = circuits[tuple.right]
+        switch (leftCircuit, rightCircuit) {
+        case let (.some(leftId), .some(rightId)):
+            guard leftId != rightId else { continue }
+            circuits.keys.forEach { key in
+                if circuits[key] == rightId {
+                    circuits[key] = leftId
+                }
+            }
+        case let (.some(leftId), .none):
+            circuits[tuple.right] = leftId
+        case let (.none, .some(rightId)):
+            circuits[tuple.left] = rightId
+        case (.none, .none):
+            circuits[tuple.left] = nextId
+            circuits[tuple.right] = nextId
+            nextId += 1
+        }
+    }
+    print(circuits)
+    let circuitSizes = circuits.reduce(into: [Int: Int]()) { (partialResult, element) in
+        let (_, value) = element
+        partialResult[value] = (partialResult[value] ?? 0) + 1
+    }
+    print(circuitSizes)
+    return circuitSizes.values.sorted().reversed().prefix(3).reduce(1, *)
 }
 
 // MARK: - Part B
 
-private extension Map {
-    func processAntinodesSecondPart() {
-        antennas.forEach { (key, antennaPositions) in
-            for pair in antennaPositions.combinations(ofCount: 2) {
-                let (left, right) = (pair[0], pair[1])
-                let vector = ((left.x - right.x), (left.y - right.y))
-                var mult = 1
-                var positionToCheck = Position(x: left.x + mult * vector.0, y: left.y + mult * vector.1)
-                var cellToCheck = self[positionToCheck]
-                while cellToCheck != nil {
-                    cellToCheck!.antinodeOf.append(key)
-                    mult += 1
-                    positionToCheck = Position(x: left.x + mult * vector.0, y: left.y + mult * vector.1)
-                    cellToCheck = self[positionToCheck]
-                }
-
-                mult = -1
-                positionToCheck = Position(x: right.x + mult * vector.0, y: right.y + mult * vector.1)
-                cellToCheck = self[positionToCheck]
-                while cellToCheck != nil {
-                    if cellToCheck!.antinodeOf.isEmpty {
-                        cellToCheck!.antinodeOf.append(key)
-                    }
-                    mult -= 1
-                    positionToCheck = Position(x: right.x + mult * vector.0, y: right.y + mult * vector.1)
-                    cellToCheck = self[positionToCheck]
-                }
-            }
-        }
-    }
-
-    var totalAntinodesSecondPart: Int {
-        return rows.compactMap { row in
-            row.filter { !$0.antinodeOf.isEmpty || $0.value != "." }.count
-        }.reduce(0, +)
-    }
-}
-
 func day8_2025_B() throws -> Int {
-    let lines = try FileReader(filename: "day8_2025_input").getLines()
-    let map = parseLines(lines)
-    map.processAntinodesSecondPart()
-    return map.totalAntinodesSecondPart
+    let lines = try FileReader(filename: "day8_2025_example").getLines()
+    let boxes = lines.map { JunctionBox(string: $0) }
+    return -1
 }
